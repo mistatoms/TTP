@@ -1,11 +1,13 @@
 import { classifyScene } from "./classify";
 import type { DetectedObject, DetectedPerson, SceneContext } from "./types";
 
-const WASM_CDN = "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.21/wasm";
+const WASM_CDN = "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@1.0.1/wasm";
 const POSE_MODEL =
   "https://storage.googleapis.com/mediapipe-models/pose_landmarker/pose_landmarker_lite/float16/1/pose_landmarker_lite.task";
-const OBJECT_MODEL =
-  "https://storage.googleapis.com/mediapipe-models/object_detector/efficientdet_lite0/float16/1/efficientdet_lite0.task";
+const OBJECT_MODELS = [
+  "https://storage.googleapis.com/mediapipe-models/object_detector/efficientdet_lite0/float16/1/efficientdet_lite0.tflite",
+  "https://storage.googleapis.com/mediapipe-models/object_detector/efficientdet_lite0/float16/latest/efficientdet_lite0.tflite",
+];
 
 type PoseLandmarker = import("@mediapipe/tasks-vision").PoseLandmarker;
 type ObjectDetector = import("@mediapipe/tasks-vision").ObjectDetector;
@@ -28,7 +30,7 @@ export class VisionPipeline {
       "@mediapipe/tasks-vision"
     );
     const fileset = await FilesetResolver.forVisionTasks(WASM_CDN);
-    const tryDelegate = async (delegate: "GPU" | "CPU") => {
+    const tryPose = async (delegate: "GPU" | "CPU") => {
       this.pose = await PoseLandmarker.createFromOptions(fileset, {
         baseOptions: { modelAssetPath: POSE_MODEL, delegate },
         runningMode: "VIDEO",
@@ -37,30 +39,50 @@ export class VisionPipeline {
         minPosePresenceConfidence: 0.4,
         minTrackingConfidence: 0.4,
       });
-      this.objects = await ObjectDetector.createFromOptions(fileset, {
-        baseOptions: { modelAssetPath: OBJECT_MODEL, delegate },
-        runningMode: "VIDEO",
-        scoreThreshold: 0.35,
-        maxResults: 8,
-      });
     };
     try {
-      await tryDelegate("GPU");
+      await tryPose("GPU");
     } catch {
-      await tryDelegate("CPU");
+      await tryPose("CPU");
+    }
+    if (!this.pose) throw new Error("Pose model failed to load");
+
+    for (const url of OBJECT_MODELS) {
+      const tryObjects = async (delegate: "GPU" | "CPU") => {
+        this.objects = await ObjectDetector.createFromOptions(fileset, {
+          baseOptions: { modelAssetPath: url, delegate },
+          runningMode: "VIDEO",
+          scoreThreshold: 0.35,
+          maxResults: 8,
+        });
+      };
+      try {
+        await tryObjects("GPU");
+        break;
+      } catch {
+        try {
+          await tryObjects("CPU");
+          break;
+        } catch {
+          this.objects = null;
+        }
+      }
+    }
+    if (!this.objects) {
+      this.error = "Object detector unavailable — pose-only scene analysis";
     }
     this.ready = true;
   }
 
   detect(video: HTMLVideoElement, ts: number): SceneContext | null {
-    if (!this.pose || !this.objects) return null;
+    if (!this.pose) return null;
     if (video.currentTime === this.lastVideoTime) return null;
     this.lastVideoTime = video.currentTime;
     const w = video.videoWidth || 1;
     const h = video.videoHeight || 1;
 
     const poses = this.pose.detectForVideo(video, ts);
-    const dets = this.objects.detectForVideo(video, ts);
+    const dets = this.objects?.detectForVideo(video, ts);
 
     const people: DetectedPerson[] = (poses.landmarks ?? []).map((lms, i) => {
       const xs = lms.map((p) => p.x);
@@ -99,7 +121,7 @@ export class VisionPipeline {
       };
     });
 
-    const objects: DetectedObject[] = (dets.detections ?? [])
+    const objects: DetectedObject[] = (dets?.detections ?? [])
       .map((d) => {
         const cat = d.categories[0];
         const bb = d.boundingBox;

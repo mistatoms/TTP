@@ -6,8 +6,11 @@ import { ParrotMascot } from "@/components/parrot-mascot";
 import { furby } from "@/lib/furby/controller";
 import { PARROT_VOICE_IDS } from "@/lib/parrot/persona";
 import { useParrotStore } from "@/lib/parrot/store";
+import type { RoastIntensity } from "@/lib/parrot/types";
 import { voiceSession } from "@/lib/voice/session";
 import { toast } from "sonner";
+
+const ROASTS: RoastIntensity[] = ["mild", "medium", "unhinged"];
 
 export function HeaderBar() {
   const antenna = useParrotStore((s) => s.antenna);
@@ -25,16 +28,23 @@ export function HeaderBar() {
   const voiceId = useParrotStore((s) => s.voiceId);
   const setVoiceId = useParrotStore((s) => s.setVoiceId);
   const aiAvailable = useParrotStore((s) => s.aiAvailable);
+  const setFurbyMode = useParrotStore((s) => s.setFurbyMode);
   const live = voiceStatus !== "idle" && voiceStatus !== "error";
+  const bleOn = furbyConnected && furbyMode === "bluetooth";
 
   async function onConnect() {
     try {
-      if (furbyConnected && furbyMode !== "simulator") {
+      if (furbyMode === "bluetooth" && furbyConnected) {
         await furby.disconnect();
         return;
       }
+      if (!furby.bluetoothAvailable()) {
+        toast.error("FurBLE needs Chrome with Web Bluetooth.");
+        return;
+      }
+      if (furbyMode !== "bluetooth") setFurbyMode("bluetooth");
       await furby.connect();
-      toast.success(`Connected to ${useParrotStore.getState().furbyName}`);
+      toast.success(`FurBLE linked to ${useParrotStore.getState().furbyName}`);
     } catch (err) {
       toast.error(err instanceof Error ? err.message : "Could not connect");
     }
@@ -62,8 +72,6 @@ export function HeaderBar() {
     setVoiceId(PARROT_VOICE_IDS[(i + 1) % PARROT_VOICE_IDS.length]!);
   }
 
-  const bleOn = furbyConnected && furbyMode !== "simulator";
-
   return (
     <header className="flex flex-wrap items-center gap-3 border-b border-border px-4 py-3 md:px-6">
       <div className="flex min-w-0 items-center gap-3">
@@ -76,13 +84,17 @@ export function HeaderBar() {
 
       <div className="ml-auto flex flex-wrap items-center gap-2">
         <div className="flex rounded-sm bg-surface-2 p-0.5 shadow-[var(--shadow-border)]">
-          {(["mild", "medium"] as const).map((level) => (
+          {ROASTS.map((level) => (
             <button
               key={level}
               type="button"
               onClick={() => setRoast(level)}
               className={`min-h-8 rounded-xs px-3 text-xs font-medium capitalize ${
-                roast === level ? "bg-surface text-fg shadow-[var(--shadow-border)]" : "text-muted"
+                roast === level
+                  ? level === "unhinged"
+                    ? "bg-danger/20 text-danger shadow-[var(--shadow-border)]"
+                    : "bg-surface text-fg shadow-[var(--shadow-border)]"
+                  : "text-muted"
               }`}
             >
               {level}
@@ -109,8 +121,8 @@ export function HeaderBar() {
         </Button>
 
         <Button variant={bleOn ? "canal" : "outline"} onClick={() => void onConnect()}>
-          {furbyConnected ? <Bluetooth /> : <BluetoothOff />}
-          {furbyMode === "simulator" ? "Sim" : furbyConnected ? "Disconnect" : "Connect"}
+          {bleOn ? <Bluetooth /> : <BluetoothOff />}
+          {bleOn ? "Disconnect" : "Connect Furby"}
         </Button>
       </div>
 

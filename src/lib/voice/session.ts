@@ -9,6 +9,7 @@ import { PcmPlayer, base64ToPcm16, createCapture, rms } from "./audio";
 
 const MODEL = "grok-voice-latest";
 const REALTIME_URL = `wss://api.x.ai/v1/realtime?model=${MODEL}`;
+const NOISE_CUE = /[.!?]|r+a+w?k|squawk|\*(click|rasp)?\*/i;
 
 type ToolArgs = Record<string, unknown>;
 
@@ -18,6 +19,7 @@ export class VoiceSession {
   private captureStop: (() => void) | null = null;
   private turns = 0;
   private outputBuf = "";
+  private responseHadAudio = false;
 
   get active() {
     return !!this.ws && this.ws.readyState === WebSocket.OPEN;
@@ -73,6 +75,8 @@ export class VoiceSession {
       store.pushReason("voice", "Live", "Parrot is listening.");
       if (opts.opening) {
         this.speakOpening(opts.opening);
+      } else {
+        void this.player.insertNoise("rawk", true);
       }
       void this.startMic();
     };
@@ -106,6 +110,7 @@ export class VoiceSession {
     if (!ws) return;
     useParrotStore.getState().pushMessage("parrot", line);
     useParrotStore.getState().setTranscripts(undefined, line);
+    void this.player.insertNoise("rawk", true);
     ws.send(
       JSON.stringify({
         type: "conversation.item.create",
@@ -120,7 +125,7 @@ export class VoiceSession {
       JSON.stringify({
         type: "response.create",
         response: {
-          instructions: `Speak this opening line in your croaky parrot voice, then wait for the human: "${line}"`,
+          instructions: `Speak this opening line in a CROAKY, raspy, gravelly parrot voice, slowly, with a rawk and a beak click in it, then wait for the human: "${line}"`,
         },
       }),
     );
@@ -201,6 +206,10 @@ export class VoiceSession {
         store.setVoiceStatus("speaking");
         const delta = String(event.delta ?? "");
         if (delta) {
+          if (!this.responseHadAudio) {
+            this.responseHadAudio = true;
+            await this.player.insertNoise("click");
+          }
           const pcm = base64ToPcm16(delta);
           store.setLevels(store.micLevel, Math.min(1, rms(pcm) * 3));
           await this.player.playPcm16(pcm);
@@ -213,6 +222,7 @@ export class VoiceSession {
         const d = String(event.delta ?? "");
         this.outputBuf += d;
         store.setTranscripts(undefined, this.outputBuf);
+        if (NOISE_CUE.test(d)) void this.player.insertNoise();
         break;
       }
       case "response.output_audio_transcript.done":
@@ -246,6 +256,8 @@ export class VoiceSession {
       case "response.done":
         store.setVoiceStatus("listening");
         store.setLevels(store.micLevel, 0);
+        if (this.responseHadAudio) void this.player.insertNoise("rasp");
+        this.responseHadAudio = false;
         break;
       case "error": {
         const err = event.error as { message?: string } | undefined;

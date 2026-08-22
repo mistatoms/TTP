@@ -17,11 +17,18 @@ import {
   type SensorReading,
 } from "./protocol";
 
-/** Chrome GC of BluetoothDevice drops GATT. Pin it. */
+/** Chrome GC of BluetoothDevice drops GATT. Pin it on window too. */
 const pinned: BluetoothDevice[] = [];
 
 function pinDevice(device: BluetoothDevice) {
   if (!pinned.includes(device)) pinned.push(device);
+  if (typeof window !== "undefined") {
+    (window as unknown as { __furbyDevices?: BluetoothDevice[] }).__furbyDevices = pinned;
+  }
+}
+
+function isFurbyName(name: string | undefined) {
+  return (name ?? "").toLowerCase().includes("furby");
 }
 
 export class BleFurby {
@@ -39,7 +46,25 @@ export class BleFurby {
   private keepAliveTimer: number | null = null;
   private writeChain: Promise<void> = Promise.resolve();
   private notifying = false;
+  private listenerBound = false;
   private lastAntenna: AntennaColor | null = null;
+  private dropHandler = () => this.handleDrop();
+  private visHandler = () => {
+    if (document.visibilityState === "visible" && this.wantOpen && !this.isConnected) {
+      void this.tryReconnect();
+    }
+  };
+  private onlineHandler = () => {
+    if (this.wantOpen && !this.isConnected) void this.tryReconnect();
+  };
+  private sensorHandler = (ev: Event) => {
+    const target = ev.target as BluetoothRemoteGATTCharacteristic;
+    const value = target.value;
+    if (!value) return;
+    const bytes = new Uint8Array(value.buffer, value.byteOffset, value.byteLength);
+    const reading = parseSensorPacket(bytes);
+    if (reading) this.onSensor?.(reading);
+  };
 
   get isConnected() {
     return !!this.server?.connected && !!this.writeChar;
@@ -51,23 +76,28 @@ export class BleFurby {
     onReconnect?: () => void;
   }): Promise<string> {
     if (!navigator.bluetooth) {
-      throw new Error("Web Bluetooth is not available in this browser");
+      throw new Error("Web Bluetooth is not available in this browser. Use Chrome on desktop.");
     }
     this.onSensor = hooks.onSensor ?? null;
     this.onDisconnect = hooks.onDisconnect ?? null;
     this.onReconnect = hooks.onReconnect ?? null;
     this.wantOpen = true;
     this.reconnectAttempt = 0;
+    this.bindPageHooks();
 
+    if (!this.device) {
+      this.device = await this.findKnownDevice();
+    }
     if (!this.device) {
       const device = await navigator.bluetooth.requestDevice({
         filters: [{ namePrefix: "Furby" }, { namePrefix: "FURBY" }],
         optionalServices: [FLUFF_SERVICE],
       });
       this.device = device;
-      pinDevice(device);
-      device.addEventListener("gattserverdisconnected", () => this.handleDrop());
     }
+    pinDevice(this.device);
+    this.device.removeEventListener("gattserverdisconnected", this.dropHandler);
+    this.device.addEventListener("gattserverdisconnected", this.dropHandler);
 
     await this.openGatt();
     return this.device.name || "Furby Connect";
@@ -84,17 +114,23 @@ export class BleFurby {
     this.wantOpen = false;
     this.stopKeepAlive();
     this.clearReconnect();
+    this.unbindPageHooks();
     try {
       await this.listenChar?.stopNotifications();
     } catch {
       /* ignore */
     }
+    if (this.listenChar && this.listenerBound) {
+      this.listenChar.removeEventListener("characteristicvaluechanged", this.sensorHandler);
+    }
     this.notifying = false;
+    this.listenerBound = false;
     try {
       this.server?.disconnect();
     } catch {
       /* ignore */
     }
+    this.device?.removeEventListener("gattserverdisconnected", this.dropHandler);
     this.server = null;
     this.writeChar = null;
     this.listenChar = null;
@@ -119,6 +155,31 @@ export class BleFurby {
     await this.write(buildDebugCommand());
   }
 
+  private async findKnownDevice(): Promise<BluetoothDevice | null> {
+    try {
+      const bluetooth = navigator.bluetooth;
+      if (!bluetooth?.getDevices) return null;
+      const devices = await bluetooth.getDevices();
+      const hit = devices.find((d) => isFurbyName(d.name));
+      if (hit) pinDevice(hit);
+      return hit ?? null;
+    } catch {
+      return null;
+    }
+  }
+
+  private bindPageHooks() {
+    document.removeEventListener("visibilitychange", this.visHandler);
+    window.removeEventListener("online", this.onlineHandler);
+    document.addEventListener("visibilitychange", this.visHandler);
+    window.addEventListener("online", this.onlineHandler);
+  }
+
+  private unbindPageHooks() {
+    document.removeEventListener("visibilitychange", this.visHandler);
+    window.removeEventListener("online", this.onlineHandler);
+  }
+
   private async openGatt() {
     const device = this.device;
     if (!device?.gatt) throw new Error("Furby GATT is unavailable");
@@ -131,17 +192,15 @@ export class BleFurby {
     } catch {
       this.nordicWrite = null;
     }
-    if (!this.notifying) {
-      await this.listenChar.startNotifications();
-      this.listenChar.addEventListener("characteristicvaluechanged", (ev) => {
-        const target = ev.target as BluetoothRemoteGATTCharacteristic;
-        const value = target.value;
-        if (!value) return;
-        const bytes = new Uint8Array(value.buffer, value.byteOffset, value.byteLength);
-        const reading = parseSensorPacket(bytes);
-        if (reading) this.onSensor?.(reading);
-      });
-      this.notifying = true;
+    if (this.listenChar) {
+      if (!this.listenerBound) {
+        this.listenChar.addEventListener("characteristicvaluechanged", this.sensorHandler);
+        this.listenerBound = true;
+      }
+      if (!this.notifying) {
+        await this.listenChar.startNotifications();
+        this.notifying = true;
+      }
     }
     if (this.nordicWrite) {
       await this.writeRaw(this.nordicWrite, buildNordicAckCommand(true));
@@ -189,7 +248,7 @@ export class BleFurby {
     this.keepAliveTimer = window.setInterval(() => {
       if (!this.isConnected) return;
       void this.write(buildSensorStreamCommand(true)).catch(() => undefined);
-    }, 2500);
+    }, 2000);
   }
 
   private stopKeepAlive() {
@@ -217,7 +276,7 @@ export class BleFurby {
       })
       .catch((err) => {
         if (this.wantOpen && this.device && !this.isConnected) this.scheduleReconnect();
-        throw err;
+        console.warn("FurBLE write failed", err);
       });
     return this.writeChain;
   }

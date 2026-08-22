@@ -13,7 +13,6 @@ export function Boot() {
     void useParrotStore.persist.rehydrate();
     const unsub = useParrotStore.persist.onFinishHydration(() => {
       const s = useParrotStore.getState();
-      furby.setPyfluffUrl(s.pyfluffUrl);
       if (s.furbyMode !== "simulator") furby.setMode(s.furbyMode);
       if (!s.scene) {
         s.applyScene(classifyScene(makeDemoDetections(s.demoScene)), "demo");

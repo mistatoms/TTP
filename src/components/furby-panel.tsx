@@ -13,8 +13,6 @@ import { toast } from "sonner";
 export function FurbyPanel() {
   const mode = useParrotStore((s) => s.furbyMode);
   const setFurbyMode = useParrotStore((s) => s.setFurbyMode);
-  const pyfluffUrl = useParrotStore((s) => s.pyfluffUrl);
-  const setPyfluffUrl = useParrotStore((s) => s.setPyfluffUrl);
   const antenna = useParrotStore((s) => s.antenna);
   const lastAction = useParrotStore((s) => s.lastAction);
   const sensors = useParrotStore((s) => s.sensors);
@@ -55,7 +53,7 @@ export function FurbyPanel() {
       </CardHeader>
 
       <div className="mb-3 flex rounded-sm bg-surface-2 p-0.5">
-        {(["simulator", "bluetooth", "pyfluff"] as const).map((m) => (
+        {(["simulator", "bluetooth"] as const).map((m) => (
           <button
             key={m}
             type="button"
@@ -64,24 +62,20 @@ export function FurbyPanel() {
               mode === m ? "bg-surface text-fg shadow-[var(--shadow-border)]" : "text-muted"
             }`}
           >
-            {m === "pyfluff" ? "PyFluff" : m === "bluetooth" ? "Web BLE" : "Sim"}
+            {m === "bluetooth" ? "FurBLE" : "Sim"}
           </button>
         ))}
       </div>
 
-      {mode === "bluetooth" && (
+      {mode === "bluetooth" ? (
         <p className="mb-3 text-xs text-muted">
-          Chrome on a machine next to the Furby. Pairing needs a tap — use Connect in the header.
+          Chrome on a machine next to the Furby. Tap Connect Furby in the header — pairing needs a
+          tap. Keep-alive and auto-reconnect stay on while linked.
         </p>
-      )}
-      {mode === "pyfluff" && (
-        <div className="mb-3 flex gap-2">
-          <Input
-            placeholder="http://raspberrypi.local:8080"
-            value={pyfluffUrl}
-            onChange={(e) => setPyfluffUrl(e.target.value)}
-          />
-        </div>
+      ) : (
+        <p className="mb-3 text-xs text-muted">
+          Simulator parrot on the treasure chest. Switch to FurBLE when the real bird is in range.
+        </p>
       )}
 
       <Tabs defaultValue="actions">
@@ -179,7 +173,7 @@ export function FurbyPanel() {
             </dl>
           ) : (
             <p className="text-sm text-muted">
-              No sensor stream yet. Simulator stays quiet; BLE and PyFluff push packets when linked.
+              No sensor stream yet. Simulator stays quiet; FurBLE pushes packets once the bird is linked.
             </p>
           )}
         </TabsContent>

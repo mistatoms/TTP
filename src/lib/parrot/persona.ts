@@ -9,7 +9,7 @@ export const PARROT_NAME = "TTPFTTP";
 export const PARROT_VOICE_IDS = ["leo", "rex", "zagan", "helix", "sal", "eve"] as const;
 export type ParrotVoiceId = (typeof PARROT_VOICE_IDS)[number];
 
-export const DEFAULT_VOICE: ParrotVoiceId = "leo";
+export const DEFAULT_VOICE: ParrotVoiceId = "rex";
 
 export function buildSystemPrompt(opts: {
   intensity: RoastIntensity;

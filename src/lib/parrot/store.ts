@@ -2,6 +2,7 @@ import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import { classifyScene, makeDemoDetections } from "@/lib/vision/classify";
 import { pickOpening, sceneSummary } from "@/lib/parrot/openings";
+import { enactSentiment } from "@/lib/parrot/sentiment";
 import { furby } from "@/lib/furby/controller";
 import { PRESET_ANTENNA, type AntennaColor, type SensorReading } from "@/lib/furby/protocol";
 import type { SceneContext, SceneId } from "@/lib/vision/types";
@@ -18,6 +19,10 @@ import { DEFAULT_VOICE, type ParrotVoiceId } from "./persona";
 
 const uid = () => Math.random().toString(36).slice(2, 10);
 
+function asFurbyMode(v: unknown): FurbyMode {
+  return v === "bluetooth" || v === "pyfluff" ? "bluetooth" : "simulator";
+}
+
 interface ParrotState {
   roastIntensity: RoastIntensity;
   autoEngage: boolean;
@@ -29,7 +34,6 @@ interface ParrotState {
   lastAction: string | null;
   antenna: AntennaColor;
   sensors: SensorReading | null;
-  pyfluffUrl: string;
   cameraMode: CameraMode;
   demoScene: SceneId;
   overlays: boolean;
@@ -50,7 +54,6 @@ interface ParrotState {
   setAutoEngage: (v: boolean) => void;
   setVoiceId: (v: ParrotVoiceId) => void;
   setFurbyMode: (v: FurbyMode) => void;
-  setPyfluffUrl: (v: string) => void;
   setCameraMode: (v: CameraMode) => void;
   setOverlays: (v: boolean) => void;
   setDemoScene: (id: SceneId) => void;
@@ -83,7 +86,6 @@ export const useParrotStore = create<ParrotState>()(
       lastAction: null,
       antenna: { ...PRESET_ANTENNA.moss },
       sensors: null,
-      pyfluffUrl: "",
       cameraMode: "demo",
       demoScene: "adult_dog",
       overlays: true,
@@ -104,17 +106,14 @@ export const useParrotStore = create<ParrotState>()(
       setAutoEngage: (v) => set({ autoEngage: v }),
       setVoiceId: (v) => set({ voiceId: v }),
       setFurbyMode: (v) => {
-        furby.setMode(v);
+        const mode = asFurbyMode(v);
+        furby.setMode(mode);
         set({
-          furbyMode: v,
-          furbyConnected: v === "simulator",
-          furbyName: v === "simulator" ? "Simulator" : v === "bluetooth" ? "Furby" : "PyFluff",
-          furbyDetail: v === "simulator" ? "Simulator online" : "Disconnected",
+          furbyMode: mode,
+          furbyConnected: mode === "simulator",
+          furbyName: mode === "simulator" ? "Simulator" : "FurBLE",
+          furbyDetail: mode === "simulator" ? "Simulator online" : "FurBLE idle — tap Connect",
         });
-      },
-      setPyfluffUrl: (v) => {
-        furby.setPyfluffUrl(v);
-        set({ pyfluffUrl: v });
       },
       setCameraMode: (v) => set({ cameraMode: v }),
       setOverlays: (v) => set({ overlays: v }),
@@ -144,10 +143,17 @@ export const useParrotStore = create<ParrotState>()(
           get().pushReason("opening", "Opening line", opening);
         }
       },
-      pushMessage: (role, text) =>
+      pushMessage: (role, text) => {
         set({
           messages: [...get().messages, { id: uid(), role, text, at: Date.now() }].slice(-80),
-        }),
+        });
+        if (role === "user" || role === "parrot") {
+          const hit = enactSentiment(text);
+          if (hit) {
+            get().pushReason("tool", "Sentiment", `${hit.sentiment} → ${hit.action}`);
+          }
+        }
+      },
       pushReason: (kind, title, detail) =>
         set({
           reasoning: reasonCap([
@@ -207,11 +213,22 @@ export const useParrotStore = create<ParrotState>()(
         autoEngage: s.autoEngage,
         voiceId: s.voiceId,
         furbyMode: s.furbyMode,
-        pyfluffUrl: s.pyfluffUrl,
         overlays: s.overlays,
         logs: s.logs,
         demoScene: s.demoScene,
       }),
+      merge: (persisted, current) => {
+        const p = (persisted ?? {}) as Partial<ParrotState> & { furbyMode?: unknown };
+        return {
+          ...current,
+          ...p,
+          furbyMode: asFurbyMode(p.furbyMode ?? current.furbyMode),
+          roastIntensity:
+            p.roastIntensity === "unhinged" || p.roastIntensity === "medium" || p.roastIntensity === "mild"
+              ? p.roastIntensity
+              : current.roastIntensity,
+        };
+      },
     },
   ),
 );

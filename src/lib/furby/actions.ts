@@ -8,7 +8,7 @@ export interface NamedAction {
   hint: string;
 }
 
-/** Curated puppet set from bluefluff actionlist + PyFluff. */
+/** Curated puppet set from bluefluff / FurBLE actionlist. */
 export const FURBY_ACTIONS: NamedAction[] = [
   { id: "greet", label: "Greet", group: "talk", tuple: { input: 29, index: 0, subindex: 0, specific: 0 }, hint: "Hi hi hello" },
   { id: "hey_there", label: "Hey there", group: "talk", tuple: { input: 40, index: 0, subindex: 0, specific: 1 }, hint: "Hey there howdy" },

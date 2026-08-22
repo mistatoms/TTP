@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Send } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardHeader, CardTitle } from "@/components/ui/card";
@@ -21,6 +21,11 @@ export function ConversationPanel() {
   const clearConversation = useParrotStore((s) => s.clearConversation);
   const [draft, setDraft] = useState("");
   const [speakingLine, setSpeakingLine] = useState(false);
+  const endRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    endRef.current?.scrollIntoView({ block: "end" });
+  }, [messages]);
 
   function send() {
     const text = draft.trim();
@@ -41,6 +46,7 @@ export function ConversationPanel() {
     if (!pendingOpening) return;
     setSpeakingLine(true);
     try {
+      await ttsPlayer.insertNoise("rawk", true);
       const res = await synthesizeSpeech({ data: { text: pendingOpening, voice: voiceId } });
       if (!res.ok) {
         toast.error(res.error);
@@ -48,6 +54,7 @@ export function ConversationPanel() {
       }
       pushMessage("parrot", pendingOpening);
       await ttsPlayer.playBase64Audio(res.audio);
+      await ttsPlayer.insertNoise("rasp");
     } catch (err) {
       toast.error(err instanceof Error ? err.message : "Could not speak");
     } finally {
@@ -56,8 +63,8 @@ export function ConversationPanel() {
   }
 
   return (
-    <Card className="flex min-h-0 flex-1 flex-col p-3">
-      <CardHeader className="mb-2">
+    <Card className="flex h-80 flex-col overflow-hidden p-3 md:h-96">
+      <CardHeader className="mb-2 shrink-0">
         <CardTitle>Conversation</CardTitle>
         <div className="flex gap-2">
           <button
@@ -73,7 +80,7 @@ export function ConversationPanel() {
           </button>
         </div>
       </CardHeader>
-      <ScrollArea className="min-h-40 flex-1 pr-2">
+      <ScrollArea className="min-h-0 flex-1 pr-2">
         {messages.length === 0 ? (
           <p className="px-1 py-6 text-sm text-muted">
             No banter yet. Pick a tow-path scene, then start talk — or speak the opening on its own.
@@ -99,9 +106,10 @@ export function ConversationPanel() {
             ))}
           </ul>
         )}
+        <div ref={endRef} />
       </ScrollArea>
       <form
-        className="mt-3 flex gap-2"
+        className="mt-3 flex shrink-0 gap-2"
         onSubmit={(e) => {
           e.preventDefault();
           send();
@@ -116,7 +124,7 @@ export function ConversationPanel() {
           <Send />
         </Button>
       </form>
-      <p className="mt-2 text-[11px] text-subtle">
+      <p className="mt-2 shrink-0 text-[11px] text-subtle">
         {voiceStatus === "listening"
           ? "Listening on the tow path…"
           : voiceStatus === "speaking"

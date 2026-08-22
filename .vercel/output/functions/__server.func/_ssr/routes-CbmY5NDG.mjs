@@ -4,14 +4,14 @@ import { n as Slot, s as require_jsx_runtime } from "../_libs/@radix-ui/react-co
 import { a as CameraOff, i as Camera, n as Send, o as Bluetooth, r as Radio, s as BluetoothOff } from "../_libs/lucide-react.mjs";
 import { n as toast } from "../_libs/sonner.mjs";
 import { t as cva } from "../_libs/class-variance-authority+clsx.mjs";
-import { n as cn } from "./router-ol9Isrl1.mjs";
+import { n as cn } from "./router-DqX6W2IN.mjs";
 import { n as TSS_SERVER_FUNCTION, r as getServerFnById, t as createServerFn } from "./ssr.mjs";
 import { n as create, t as persist } from "../_libs/zustand.mjs";
 import { i as Viewport, n as Scrollbar, r as Thumb, t as Root } from "../_libs/radix-ui__react-scroll-area.mjs";
 import { i as SliderTrack, n as SliderRange, r as SliderThumb, t as Slider$1 } from "../_libs/@radix-ui/react-slider+[...].mjs";
 import { i as Trigger, n as List, r as Root2, t as Content } from "../_libs/radix-ui__react-tabs.mjs";
 import { n as SwitchThumb, t as Switch$1 } from "../_libs/radix-ui__react-switch.mjs";
-//#region node_modules/.nitro/vite/services/ssr/assets/routes-B9XOkEM0.js
+//#region node_modules/.nitro/vite/services/ssr/assets/routes-CbmY5NDG.js
 var import_react = /* @__PURE__ */ __toESM(require_react());
 var import_jsx_runtime = require_jsx_runtime();
 function Card({ className, ...props }) {
@@ -265,7 +265,12 @@ var BANKS = {
 			"Tow path's empty. I shall mutter to the canal until someone interesting floats by.",
 			"Nothing but ripples. Even the coots have somewhere better to be."
 		],
-		medium: ["Deserted. Typical. I rehearse my best material and the audience is a mooring pin.", "Empty path. If a joke lands in the cut and nobody hears it, I still tell it."]
+		medium: ["Deserted. Typical. I rehearse my best material and the audience is a mooring pin.", "Empty path. If a joke lands in the cut and nobody hears it, I still tell it."],
+		unhinged: [
+			"Nobody. Just me, a mouldy rope, and the existential horror of a bank holiday. Rrawk.",
+			"Deserted. Even the litter's clocked off. Bloody typical.",
+			"Empty path. I shall swear at the water until it answers."
+		]
 	},
 	single_adult: {
 		mild: [
@@ -273,23 +278,48 @@ var BANKS = {
 			"Go on then, give us a nod. I don't get many reviews this far from a pub.",
 			"Tow path tax: one hello. I'll waive the rest."
 		],
-		medium: ["Look at you, marching like you've somewhere important to be. The canal disagrees.", "A lone walker. Either deep in thought or just forgotten the shopping list. Both honourable."]
+		medium: ["Look at you, marching like you've somewhere important to be. The canal disagrees.", "A lone walker. Either deep in thought or just forgotten the shopping list. Both honourable."],
+		unhinged: [
+			"Look at you, stomping along like you own the cut. You don't. The ducks do.",
+			"One human. Already over budget. Go on, pretend you didn't hear the bird.",
+			"Afternoon, stray. If that's a constitutional, the constitution wants a word."
+		]
 	},
 	single_adult_male: {
 		mild: ["Alright mate. If you're lost, the next lock's that way and my advice is free but unsound.", "Easy now — the path's older than your trainers and twice as stubborn."],
-		medium: ["Hands in pockets, purpose in the stride. Very canal-coded. I respect it, barely.", "If that's a power-walk, the ducks remain unimpressed. Same, if I'm honest."]
+		medium: ["Hands in pockets, purpose in the stride. Very canal-coded. I respect it, barely.", "If that's a power-walk, the ducks remain unimpressed. Same, if I'm honest."],
+		unhinged: [
+			"Alright pal. Hands in pockets, brain on standby. Classic.",
+			"Mate, if that's a power-walk the ducks are filing a complaint. Same, frankly.",
+			"Big stride, small destination. The lock doesn't care about your steps app."
+		]
 	},
 	single_adult_female: {
 		mild: ["Good day to you. The heron's off-shift so I'm covering greetings.", "Mind the puddle by the bench. It's been there since Thursday and has tenure."],
-		medium: ["Purposeful walk, excellent posture, and somehow still slower than that spaniel yesterday.", "If you're counting steps, add one for nodding at the local parrot. Union rules."]
+		medium: ["Purposeful walk, excellent posture, and somehow still slower than that spaniel yesterday.", "If you're counting steps, add one for nodding at the local parrot. Union rules."],
+		unhinged: [
+			"Purposeful walk, expensive coat, and still losing to a spaniel. The cut keeps receipts.",
+			"If you're counting steps, add one for ignoring the bird. Coward's maths.",
+			"Mind that puddle. It's been there since Thursday and has more personality than most meetings."
+		]
 	},
 	multiple_adults: {
 		mild: ["A congregation. I shall keep this short — I know how walkers travel in packs.", "Two or more humans. Statistically, at least one of you likes boats. I can tell."],
-		medium: ["Group outing. Who's in charge of the snacks and who's in charge of the opinions?", "Lovely. A committee. The canal has waited all week for a quorum."]
+		medium: ["Group outing. Who's in charge of the snacks and who's in charge of the opinions?", "Lovely. A committee. The canal has waited all week for a quorum."],
+		unhinged: [
+			"A pack. Who's in charge of the snacks and who's in charge of the rubbish opinions?",
+			"Committee on the tow path. The canal didn't vote for this.",
+			"Two or more of you. Statistically at least one is insufferable. Rrawk — I'll find them."
+		]
 	},
 	adult_child: {
 		mild: ["Hello you two. Best behaviour — there's a parrot on duty and he reports to the ducks.", "Small person spotted. Welcome to the unofficial nature trail. The fish are shy; I am not."],
-		medium: ["Family patrol. If anyone asks, I am educational content with a beak.", "Keep hold of little legs near the edge. The water's decorative. I am not."]
+		medium: ["Family patrol. If anyone asks, I am educational content with a beak.", "Keep hold of little legs near the edge. The water's decorative. I am not."],
+		unhinged: [
+			"Family patrol. Adult: you're on notice. Small person: you're fine, the bird likes you.",
+			"Keep hold of little legs. The water's decorative. The adult's decision-making is the hazard.",
+			"Educational content with a beak, apparently. The grown-up can take the roasting. Not you, kid."
+		]
 	},
 	adult_dog: {
 		mild: [
@@ -297,23 +327,48 @@ var BANKS = {
 			"Yes hello, four-legs. Your human may speak too, if they must.",
 			"That tail's doing more cardio than most joggers I see."
 		],
-		medium: ["The dog's in charge. We all know it. Don't embarrass yourself by pretending otherwise.", "If that's a 'quick walk', the spaniel's press officer would like a word."]
+		medium: ["The dog's in charge. We all know it. Don't embarrass yourself by pretending otherwise.", "If that's a 'quick walk', the spaniel's press officer would like a word."],
+		unhinged: [
+			"Oh thank Christ, a dog. The human can stay quiet. Four-legs is the only one with manners.",
+			"The dog's in charge. We all know it. Stop embarrassing yourself.",
+			"That tail's doing more work than your fitness app. Sit. Not you, human — you can keep walking."
+		]
 	},
 	single_jogger: {
 		mild: ["Lycra at twelve o'clock. I'll keep this brief — you've got a personal best to miss.", "Nice cadence. The tow path's flattered. The puddles are less so."],
-		medium: ["Running from something, or toward a cake? Be honest, the canal can keep a secret.", "Impressive commitment to bouncing past a parrot. Form: chaotic. Spirit: strong."]
+		medium: ["Running from something, or toward a cake? Be honest, the canal can keep a secret.", "Impressive commitment to bouncing past a parrot. Form: chaotic. Spirit: strong."],
+		unhinged: [
+			"Lycra. Of course. Go on, bounce past like the rest of us are furniture.",
+			"Personal best? Pal, your best is still a bit sad on a shared path. Watch the puddles.",
+			"Running from your personality, is it? The canal's seen worse. Barely."
+		]
 	},
 	multiple_joggers: {
 		mild: ["A peloton of trainers. I'll just… perch here and not get involved.", "Group run. Remember: chatting counts as recovery. I read that on a bin."],
-		medium: ["Pack of joggers. If you're racing, the winner buys the loser a sit-down.", "Synchronised panting. Very modern ballet, very little canal etiquette."]
+		medium: ["Pack of joggers. If you're racing, the winner buys the loser a sit-down.", "Synchronised panting. Very modern ballet, very little canal etiquette."],
+		unhinged: [
+			"A herd of lycra. The ducks have formed a union. I am the shop steward.",
+			"Group run. Chat less, watch more — this is a path, not your spinning class.",
+			"Synchronised panting. Very modern, very rude. Winner buys the loser a sit-down and a personality."
+		]
 	},
 	cyclist: {
 		mild: ["Bell's optional, charm is not. Afternoon, two-wheels.", "Share the path — I've got claws and a public, you've got gears."],
-		medium: ["A bicycle. On a tow path. Bold. The walkers send their regards, via me.", "If you ping the bell I shall consider a nod. Maybe."]
+		medium: ["A bicycle. On a tow path. Bold. The walkers send their regards, via me.", "If you ping the bell I shall consider a nod. Maybe."],
+		unhinged: [
+			"A bicycle. On a tow path. Bold. Stupid. Both can be true.",
+			"Ping that bell at me and I'll consider a nod. Maybe a swear. Dealer's choice.",
+			"Share the path, two-wheels. Walkers live here. You're a guest with ideas above your station."
+		]
 	},
 	multiple_cyclists: {
 		mild: ["A small peloton. The ducks have formed a union about this, just so you know.", "Two bikes. One path. Let's all pretend we planned this."],
-		medium: ["Club ride energy on a public footpath. I admire the optimism.", "If this is a time trial, the time is 'please remember people exist'."]
+		medium: ["Club ride energy on a public footpath. I admire the optimism.", "If this is a time trial, the time is 'please remember people exist'."],
+		unhinged: [
+			"Club ride energy on a public footpath. The optimism is insulting.",
+			"If this is a time trial, the time is 'remember people exist, you peloton of gits'.",
+			"Two bikes, one path, zero manners. The ducks are taking names."
+		]
 	},
 	close_sitter: {
 		mild: [
@@ -325,11 +380,17 @@ var BANKS = {
 			"Desk posture like a question mark. The parrot notices. The parrot will mention it.",
 			"If you're debugging, I can offer unsolicited comments. It's my whole job.",
 			"Webcam's on, brain's halfway down the cut. Relatable."
+		],
+		unhinged: [
+			"Desk posture like a question mark. Sit up, you melt. The parrot notices.",
+			"Webcam's on, brain's off. Relatable. Tragic. Both.",
+			"If you're debugging, I can offer unsolicited comments. It's my whole job and I'm better at it than your standup."
 		]
 	},
 	unknown: {
 		mild: ["Something's moving. Could be a person. Could be a very confident bin bag.", "Unclear scene, strong vibes. I'll start talking anyway — that's the brand."],
-		medium: ["Can't quite classify you. That's fine. I roast on instinct."]
+		medium: ["Can't quite classify you. That's fine. I roast on instinct."],
+		unhinged: ["Can't classify you. That's fine. I roast on instinct and spite.", "Something's moving. Person, bin bag, or a wellness walk. I'll be rude to all three."]
 	}
 };
 var DAY_PREFIX = { any: {
@@ -340,7 +401,7 @@ var DAY_PREFIX = { any: {
 } };
 function pickOpening(scene, intensity, salt = Date.now()) {
 	const bank = BANKS[scene.id] ?? BANKS.unknown;
-	const lines = intensity === "medium" ? bank.medium : bank.mild;
+	const lines = intensity === "unhinged" ? bank.unhinged : intensity === "medium" ? bank.medium : bank.mild;
 	const line = lines[Math.abs(salt) % lines.length] ?? lines[0];
 	const prefixes = DAY_PREFIX.any?.[scene.dayPart] ?? [];
 	const prefix = prefixes.length > 0 && Math.abs(salt >> 3) % 3 === 0 ? prefixes[Math.abs(salt >> 2) % prefixes.length] : "";
@@ -358,7 +419,7 @@ function sceneSummary(scene) {
 		`confidence ${(scene.confidence * 100).toFixed(0)}%`
 	].filter(Boolean).join(" · ");
 }
-/** Curated puppet set from bluefluff actionlist + PyFluff. */
+/** Curated puppet set from bluefluff / FurBLE actionlist. */
 var FURBY_ACTIONS = [
 	{
 		id: "greet",
@@ -603,10 +664,11 @@ var FURBY_ACTIONS = [
 ];
 var ACTION_BY_ID = Object.fromEntries(FURBY_ACTIONS.map((a) => [a.id, a]));
 var IDLE_ACTIONS = FURBY_ACTIONS.filter((a) => a.group === "idle");
-/** PyFluff / bluefluff Furby Connect BLE protocol. */
+/** FurBLE / bluefluff Furby Connect BLE protocol. */
 var FLUFF_SERVICE = "dab91435-b5a1-e29c-b041-bcd562613bde";
 var GENERALPLUS_WRITE = "dab91383-b5a1-e29c-b041-bcd562613bde";
 var GENERALPLUS_LISTEN = "dab91382-b5a1-e29c-b041-bcd562613bde";
+var NORDIC_WRITE = "dab90757-b5a1-e29c-b041-bcd562613bde";
 var GP = {
 	TRIGGER_BY_INPUT: 16,
 	TRIGGER_BY_INDEX: 17,
@@ -617,6 +679,10 @@ var GP = {
 	SET_MOODMETER: 35,
 	LCD_DEBUG: 219,
 	LCD_BACKLIGHT: 205
+};
+var FURBY_MSG = {
+	SENSOR_STREAM_ON: 13,
+	SENSOR_STREAM_OFF: 14
 };
 var MOOD_TYPE_ID = {
 	excitedness: 0,
@@ -657,16 +723,14 @@ function buildLcdCommand(on) {
 function buildDebugCommand() {
 	return new Uint8Array([GP.LCD_DEBUG]);
 }
+function buildSensorStreamCommand(on) {
+	return new Uint8Array([GP.FURBY_MESSAGE, on ? FURBY_MSG.SENSOR_STREAM_ON : FURBY_MSG.SENSOR_STREAM_OFF]);
+}
+function buildNordicAckCommand(on) {
+	return new Uint8Array([9, on ? 1 : 0]);
+}
 function parseSensorPacket(bytes) {
 	if (bytes.length < 2) return null;
-	if (bytes[0] !== 33 && bytes[0] !== GP.FURBY_MESSAGE) return {
-		at: Date.now(),
-		raw: Array.from(bytes),
-		antennaX: bytes[1] ?? 0,
-		antennaY: bytes[2] ?? 0,
-		motion: bytes[3] ?? 0,
-		tickle: bytes[4] ?? 0
-	};
 	return {
 		at: Date.now(),
 		raw: Array.from(bytes),
@@ -720,59 +784,113 @@ var PRESET_ANTENNA = {
 		g: 30,
 		b: 30
 	},
+	green: {
+		r: 30,
+		g: 170,
+		b: 70
+	},
 	blue: {
 		r: 40,
 		g: 80,
 		b: 220
 	}
 };
+/** Chrome GC of BluetoothDevice drops GATT. Pin it on window too. */
+var pinned = [];
+function pinDevice(device) {
+	if (!pinned.includes(device)) pinned.push(device);
+	if (typeof window !== "undefined") window.__furbyDevices = pinned;
+}
+function isFurbyName(name) {
+	return (name ?? "").toLowerCase().includes("furby");
+}
 var BleFurby = class {
 	device = null;
 	server = null;
 	writeChar = null;
 	listenChar = null;
+	nordicWrite = null;
 	onSensor = null;
 	onDisconnect = null;
+	onReconnect = null;
+	wantOpen = false;
+	reconnectTimer = null;
+	reconnectAttempt = 0;
+	keepAliveTimer = null;
+	writeChain = Promise.resolve();
+	notifying = false;
+	listenerBound = false;
+	lastAntenna = null;
+	dropHandler = () => this.handleDrop();
+	visHandler = () => {
+		if (document.visibilityState === "visible" && this.wantOpen && !this.isConnected) this.tryReconnect();
+	};
+	onlineHandler = () => {
+		if (this.wantOpen && !this.isConnected) this.tryReconnect();
+	};
+	sensorHandler = (ev) => {
+		const value = ev.target.value;
+		if (!value) return;
+		const reading = parseSensorPacket(new Uint8Array(value.buffer, value.byteOffset, value.byteLength));
+		if (reading) this.onSensor?.(reading);
+	};
+	get isConnected() {
+		return !!this.server?.connected && !!this.writeChar;
+	}
 	async connect(hooks) {
-		if (!navigator.bluetooth) throw new Error("Web Bluetooth is not available in this browser");
+		if (!navigator.bluetooth) throw new Error("Web Bluetooth is not available in this browser. Use Chrome on desktop.");
 		this.onSensor = hooks.onSensor ?? null;
 		this.onDisconnect = hooks.onDisconnect ?? null;
-		const device = await navigator.bluetooth.requestDevice({
-			filters: [{ namePrefix: "Furby" }],
-			optionalServices: [FLUFF_SERVICE]
-		});
-		this.device = device;
-		device.addEventListener("gattserverdisconnected", () => {
-			this.onDisconnect?.();
-		});
-		const server = await device.gatt.connect();
-		this.server = server;
-		const service = await server.getPrimaryService(FLUFF_SERVICE);
-		this.writeChar = await service.getCharacteristic(GENERALPLUS_WRITE);
-		this.listenChar = await service.getCharacteristic(GENERALPLUS_LISTEN);
-		await this.listenChar.startNotifications();
-		this.listenChar.addEventListener("characteristicvaluechanged", (ev) => {
-			const value = ev.target.value;
-			if (!value) return;
-			const reading = parseSensorPacket(new Uint8Array(value.buffer, value.byteOffset, value.byteLength));
-			if (reading) this.onSensor?.(reading);
-		});
-		return device.name || "Furby Connect";
+		this.onReconnect = hooks.onReconnect ?? null;
+		this.wantOpen = true;
+		this.reconnectAttempt = 0;
+		this.bindPageHooks();
+		if (!this.device) this.device = await this.findKnownDevice();
+		if (!this.device) {
+			const device = await navigator.bluetooth.requestDevice({
+				filters: [{ namePrefix: "Furby" }, { namePrefix: "FURBY" }],
+				optionalServices: [FLUFF_SERVICE]
+			});
+			this.device = device;
+		}
+		pinDevice(this.device);
+		this.device.removeEventListener("gattserverdisconnected", this.dropHandler);
+		this.device.addEventListener("gattserverdisconnected", this.dropHandler);
+		await this.openGatt();
+		return this.device.name || "Furby Connect";
+	}
+	async ensureConnected() {
+		if (this.isConnected) return;
+		if (!this.device) throw new Error("Furby is not paired. Tap Connect first.");
+		this.wantOpen = true;
+		await this.openGatt();
 	}
 	async disconnect() {
+		this.wantOpen = false;
+		this.stopKeepAlive();
+		this.clearReconnect();
+		this.unbindPageHooks();
 		try {
 			await this.listenChar?.stopNotifications();
 		} catch {}
-		this.server?.disconnect();
-		this.device = null;
+		if (this.listenChar && this.listenerBound) this.listenChar.removeEventListener("characteristicvaluechanged", this.sensorHandler);
+		this.notifying = false;
+		this.listenerBound = false;
+		try {
+			this.server?.disconnect();
+		} catch {}
+		this.device?.removeEventListener("gattserverdisconnected", this.dropHandler);
 		this.server = null;
 		this.writeChar = null;
 		this.listenChar = null;
+		this.nordicWrite = null;
+		this.device = null;
 	}
 	async writeAction(tuple) {
 		await this.write(buildActionCommand(tuple));
 	}
 	async writeAntenna(c) {
+		this.lastAntenna = c;
 		await this.write(buildAntennaCommand(c));
 	}
 	async writeMood(type, value) {
@@ -784,104 +902,126 @@ var BleFurby = class {
 	async writeDebug() {
 		await this.write(buildDebugCommand());
 	}
-	async write(bytes) {
-		if (!this.writeChar) throw new Error("Furby is not connected over Bluetooth");
+	async findKnownDevice() {
+		try {
+			const bluetooth = navigator.bluetooth;
+			if (!bluetooth?.getDevices) return null;
+			const hit = (await bluetooth.getDevices()).find((d) => isFurbyName(d.name));
+			if (hit) pinDevice(hit);
+			return hit ?? null;
+		} catch {
+			return null;
+		}
+	}
+	bindPageHooks() {
+		document.removeEventListener("visibilitychange", this.visHandler);
+		window.removeEventListener("online", this.onlineHandler);
+		document.addEventListener("visibilitychange", this.visHandler);
+		window.addEventListener("online", this.onlineHandler);
+	}
+	unbindPageHooks() {
+		document.removeEventListener("visibilitychange", this.visHandler);
+		window.removeEventListener("online", this.onlineHandler);
+	}
+	async openGatt() {
+		const device = this.device;
+		if (!device?.gatt) throw new Error("Furby GATT is unavailable");
+		this.server = device.gatt.connected ? device.gatt : await device.gatt.connect();
+		const service = await this.server.getPrimaryService(FLUFF_SERVICE);
+		this.writeChar = await service.getCharacteristic(GENERALPLUS_WRITE);
+		this.listenChar = await service.getCharacteristic(GENERALPLUS_LISTEN);
+		try {
+			this.nordicWrite = await service.getCharacteristic(NORDIC_WRITE);
+		} catch {
+			this.nordicWrite = null;
+		}
+		if (this.listenChar) {
+			if (!this.listenerBound) {
+				this.listenChar.addEventListener("characteristicvaluechanged", this.sensorHandler);
+				this.listenerBound = true;
+			}
+			if (!this.notifying) {
+				await this.listenChar.startNotifications();
+				this.notifying = true;
+			}
+		}
+		if (this.nordicWrite) await this.writeRaw(this.nordicWrite, buildNordicAckCommand(true));
+		await this.write(buildLcdCommand(true));
+		await this.write(buildSensorStreamCommand(true));
+		if (this.lastAntenna) await this.write(buildAntennaCommand(this.lastAntenna));
+		this.reconnectAttempt = 0;
+		this.startKeepAlive();
+	}
+	handleDrop() {
+		this.server = null;
+		this.writeChar = null;
+		this.listenChar = null;
+		this.nordicWrite = null;
+		this.notifying = false;
+		this.stopKeepAlive();
+		this.onDisconnect?.();
+		if (!this.wantOpen || !this.device) return;
+		this.scheduleReconnect();
+	}
+	scheduleReconnect() {
+		this.clearReconnect();
+		const delay = Math.min(8e3, 400 * 2 ** this.reconnectAttempt);
+		this.reconnectAttempt += 1;
+		this.reconnectTimer = window.setTimeout(() => {
+			this.tryReconnect();
+		}, delay);
+	}
+	async tryReconnect() {
+		if (!this.wantOpen || !this.device) return;
+		try {
+			await this.openGatt();
+			this.onReconnect?.();
+		} catch {
+			if (this.wantOpen) this.scheduleReconnect();
+		}
+	}
+	startKeepAlive() {
+		this.stopKeepAlive();
+		this.keepAliveTimer = window.setInterval(() => {
+			if (!this.isConnected) return;
+			this.write(buildSensorStreamCommand(true)).catch(() => void 0);
+		}, 2e3);
+	}
+	stopKeepAlive() {
+		if (this.keepAliveTimer != null) {
+			window.clearInterval(this.keepAliveTimer);
+			this.keepAliveTimer = null;
+		}
+	}
+	clearReconnect() {
+		if (this.reconnectTimer != null) {
+			window.clearTimeout(this.reconnectTimer);
+			this.reconnectTimer = null;
+		}
+	}
+	write(bytes) {
+		this.writeChain = this.writeChain.then(async () => {
+			if (!this.writeChar) {
+				if (this.wantOpen && this.device) await this.openGatt();
+			}
+			if (!this.writeChar) throw new Error("Furby is not connected over Bluetooth");
+			await this.writeRaw(this.writeChar, bytes);
+		}).catch((err) => {
+			if (this.wantOpen && this.device && !this.isConnected) this.scheduleReconnect();
+			console.warn("FurBLE write failed", err);
+		});
+		return this.writeChain;
+	}
+	async writeRaw(char, bytes) {
 		const copy = new Uint8Array(bytes);
-		if (this.writeChar.properties.writeWithoutResponse) await this.writeChar.writeValueWithoutResponse(copy);
-		else await this.writeChar.writeValue(copy);
-	}
-};
-/** Talks to a PyFluff FastAPI host (Raspberry Pi, laptop, etc.). */
-var PyFluffClient = class {
-	baseUrl = "";
-	sensorWs = null;
-	url(path) {
-		if (!this.baseUrl) throw new Error("Set a PyFluff URL first");
-		return `${this.baseUrl}${path}`;
-	}
-	async connect(address) {
-		const res = await fetch(this.url("/connect"), {
-			method: "POST",
-			headers: { "Content-Type": "application/json" },
-			body: JSON.stringify(address ? { address } : {})
-		});
-		if (!res.ok) throw new Error(`PyFluff connect failed (${res.status})`);
-		return { name: (await res.json().catch(() => ({}))).name ?? "Furby Connect" };
-	}
-	async disconnect() {
-		this.sensorWs?.close();
-		this.sensorWs = null;
-		if (!this.baseUrl) return;
-		await fetch(this.url("/disconnect"), { method: "POST" }).catch(() => void 0);
-	}
-	async action(tuple) {
-		const res = await fetch(this.url("/action"), {
-			method: "POST",
-			headers: { "Content-Type": "application/json" },
-			body: JSON.stringify(tuple)
-		});
-		if (!res.ok) throw new Error(`Action failed (${res.status})`);
-	}
-	async sequence(actions, delay = 1.2) {
-		const res = await fetch(this.url("/actions/sequence"), {
-			method: "POST",
-			headers: { "Content-Type": "application/json" },
-			body: JSON.stringify({
-				actions,
-				delay
-			})
-		});
-		if (!res.ok) throw new Error(`Sequence failed (${res.status})`);
-	}
-	async antenna(c) {
-		await fetch(this.url("/antenna"), {
-			method: "POST",
-			headers: { "Content-Type": "application/json" },
-			body: JSON.stringify({
-				red: c.r,
-				green: c.g,
-				blue: c.b
-			})
-		});
-	}
-	async mood(type, value) {
-		await fetch(this.url("/mood"), {
-			method: "POST",
-			headers: { "Content-Type": "application/json" },
-			body: JSON.stringify({
-				type,
-				value,
-				action: 1
-			})
-		});
-	}
-	async lcd(on) {
-		await fetch(this.url(`/lcd/${on}`), { method: "POST" });
-	}
-	async debug() {
-		await fetch(this.url("/debug"), { method: "POST" });
-	}
-	async status() {
-		return (await fetch(this.url("/status"))).json();
-	}
-	watchSensors(onReading) {
-		if (!this.baseUrl) return;
-		const wsUrl = this.baseUrl.replace(/^http/, "ws") + "/ws/sensors";
-		const ws = new WebSocket(wsUrl);
-		this.sensorWs = ws;
-		ws.onmessage = (ev) => {
-			try {
-				const data = JSON.parse(String(ev.data));
-				onReading({
-					at: Date.now(),
-					raw: data.raw ?? [],
-					antennaX: data.antennaX ?? 0,
-					antennaY: data.antennaY ?? 0,
-					motion: data.motion ?? 0,
-					tickle: data.tickle ?? 0
-				});
-			} catch {}
-		};
+		try {
+			if (char.properties.writeWithoutResponse) await char.writeValueWithoutResponse(copy);
+			else await char.writeValue(copy);
+		} catch {
+			await new Promise((r) => setTimeout(r, 80));
+			if (char.properties.writeWithoutResponse) await char.writeValueWithoutResponse(copy);
+			else await char.writeValue(copy);
+		}
 	}
 };
 var SimulatedFurby = class {
@@ -905,10 +1045,8 @@ var SimulatedFurby = class {
 };
 var FurbyController = class {
 	mode = "simulator";
-	pyfluffUrl = "";
 	ble = new BleFurby();
 	sim = new SimulatedFurby();
-	rest = new PyFluffClient();
 	listeners = /* @__PURE__ */ new Set();
 	lastAction = null;
 	antenna = { ...PRESET_ANTENNA.moss };
@@ -936,18 +1074,14 @@ var FurbyController = class {
 			});
 		} else {
 			this.connected = false;
-			this.name = mode === "bluetooth" ? "Furby" : "PyFluff";
+			this.name = "FurBLE";
 			this.emit({
 				type: "status",
 				connected: false,
 				name: this.name,
-				detail: mode === "bluetooth" ? "Web Bluetooth idle" : "PyFluff idle"
+				detail: "FurBLE idle"
 			});
 		}
-	}
-	setPyfluffUrl(url) {
-		this.pyfluffUrl = url.replace(/\/$/, "");
-		this.rest.baseUrl = this.pyfluffUrl;
 	}
 	async connect() {
 		if (this.mode === "simulator") {
@@ -961,66 +1095,57 @@ var FurbyController = class {
 			});
 			return;
 		}
-		if (this.mode === "bluetooth") {
-			this.emit({
-				type: "status",
-				connected: false,
-				name: "Furby",
-				detail: "Requesting Bluetooth device…"
-			});
-			try {
-				const name = await this.ble.connect({
-					onSensor: (r) => this.emit({
-						type: "sensor",
-						reading: r
-					}),
-					onDisconnect: () => {
-						this.connected = false;
-						this.emit({
-							type: "status",
-							connected: false,
-							name: this.name,
-							detail: "Bluetooth disconnected"
-						});
-					}
-				});
-				this.connected = true;
-				this.name = name;
-				this.emit({
-					type: "status",
-					connected: true,
-					name,
-					detail: "Web Bluetooth connected"
-				});
-				await this.setAntenna(this.antenna);
-			} catch (err) {
-				const message = err instanceof Error ? err.message : "Bluetooth failed";
-				this.emit({
-					type: "error",
-					message
-				});
-				throw err;
-			}
-			return;
-		}
-		this.rest.baseUrl = this.pyfluffUrl;
-		const res = await this.rest.connect();
-		this.connected = true;
-		this.name = res.name ?? "PyFluff";
-		this.rest.watchSensors((r) => this.emit({
-			type: "sensor",
-			reading: r
-		}));
 		this.emit({
 			type: "status",
-			connected: true,
-			name: this.name,
-			detail: "PyFluff connected"
+			connected: false,
+			name: "FurBLE",
+			detail: "Requesting Furby…"
 		});
+		try {
+			const name = await this.ble.connect({
+				onSensor: (r) => this.emit({
+					type: "sensor",
+					reading: r
+				}),
+				onDisconnect: () => {
+					this.connected = false;
+					this.emit({
+						type: "status",
+						connected: false,
+						name: this.name,
+						detail: "Dropped — reconnecting…"
+					});
+				},
+				onReconnect: () => {
+					this.connected = true;
+					this.emit({
+						type: "status",
+						connected: true,
+						name: this.name,
+						detail: "FurBLE reconnected"
+					});
+				}
+			});
+			this.connected = true;
+			this.name = name;
+			this.emit({
+				type: "status",
+				connected: true,
+				name,
+				detail: "FurBLE connected"
+			});
+			await this.setAntenna(this.antenna);
+		} catch (err) {
+			const message = err instanceof Error ? err.message : "Bluetooth failed";
+			this.emit({
+				type: "error",
+				message
+			});
+			throw err;
+		}
 	}
 	async disconnect() {
 		if (this.mode === "bluetooth") await this.ble.disconnect();
-		if (this.mode === "pyfluff") await this.rest.disconnect();
 		if (this.mode !== "simulator") {
 			this.connected = false;
 			this.emit({
@@ -1037,9 +1162,17 @@ var FurbyController = class {
 		if (!tuple) throw new Error(`Unknown action ${String(idOrTuple)}`);
 		const label = named?.label ?? `${tuple.input}.${tuple.index}.${tuple.subindex}.${tuple.specific}`;
 		this.lastAction = label;
-		if (this.mode === "simulator" || !this.connected) this.sim.play(label);
-		else if (this.mode === "bluetooth") await this.ble.writeAction(tuple);
-		else await this.rest.action(tuple);
+		this.sim.play(label);
+		if (this.mode === "bluetooth") try {
+			await this.ble.ensureConnected();
+			await this.ble.writeAction(tuple);
+		} catch (err) {
+			const message = err instanceof Error ? err.message : "Action failed";
+			this.emit({
+				type: "error",
+				message
+			});
+		}
 		this.emit({
 			type: "action",
 			label
@@ -1047,9 +1180,11 @@ var FurbyController = class {
 	}
 	async setAntenna(color) {
 		this.antenna = { ...color };
-		if (this.mode === "bluetooth" && this.connected) await this.ble.writeAntenna(color);
-		if (this.mode === "pyfluff" && this.connected) await this.rest.antenna(color);
 		this.sim.setAntenna(color);
+		if (this.mode === "bluetooth") try {
+			await this.ble.ensureConnected();
+			await this.ble.writeAntenna(color);
+		} catch {}
 		this.emit({
 			type: "antenna",
 			color
@@ -1060,22 +1195,124 @@ var FurbyController = class {
 		await this.setAntenna(c);
 	}
 	async setMood(type, value) {
-		if (this.mode === "bluetooth" && this.connected) await this.ble.writeMood(type, value);
-		if (this.mode === "pyfluff" && this.connected) await this.rest.mood(type, value);
+		if (this.mode === "bluetooth") try {
+			await this.ble.ensureConnected();
+			await this.ble.writeMood(type, value);
+		} catch {}
 	}
 	async setLcd(on) {
-		if (this.mode === "bluetooth" && this.connected) await this.ble.writeLcd(on);
-		if (this.mode === "pyfluff" && this.connected) await this.rest.lcd(on);
+		if (this.mode === "bluetooth") try {
+			await this.ble.ensureConnected();
+			await this.ble.writeLcd(on);
+		} catch {}
 	}
 	async debug() {
-		if (this.mode === "bluetooth" && this.connected) await this.ble.writeDebug();
-		if (this.mode === "pyfluff" && this.connected) await this.rest.debug();
+		if (this.mode === "bluetooth") try {
+			await this.ble.ensureConnected();
+			await this.ble.writeDebug();
+		} catch {}
 	}
 	bluetoothAvailable() {
 		return typeof navigator !== "undefined" && !!navigator.bluetooth;
 	}
 };
 var furby = new FurbyController();
+var RULES = [
+	{
+		sentiment: "amused",
+		action: "laugh",
+		antenna: "cheeky",
+		re: /\b(haha|lol|lmao|funny|joke|giggle|laugh|hilarious|snort)\b|[😂🤣]/i
+	},
+	{
+		sentiment: "amused",
+		action: "giggle",
+		antenna: "cheeky",
+		re: /\b(heh|teehee|tickl)/i
+	},
+	{
+		sentiment: "surprised",
+		action: "surprised",
+		antenna: "surprise",
+		re: /\b(whoa|woah|what the|no way|never|really\?|huh\?|wait)\b|!\?|\?!/i
+	},
+	{
+		sentiment: "excited",
+		action: "excited",
+		antenna: "green",
+		re: /\b(yes|yay|woo|brilliant|love that|let's go|awesome|amazing)\b/i
+	},
+	{
+		sentiment: "excited",
+		action: "dance",
+		antenna: "cheeky",
+		re: /\b(dance|party|tune|bop|groove)\b/i
+	},
+	{
+		sentiment: "curious",
+		action: "curious",
+		antenna: "canal",
+		re: /\b(why|how|what|where|who|curious|wonder)\b|\?/i
+	},
+	{
+		sentiment: "sleepy",
+		action: "yawn",
+		antenna: "sleepy",
+		re: /\b(tired|sleep|yawn|boring|nap|zzz)\b/i
+	},
+	{
+		sentiment: "warm",
+		action: "purr",
+		antenna: "moss",
+		re: /\b(love|sweet|good boy|good girl|thanks|thank you|cute|aww)\b/i
+	},
+	{
+		sentiment: "annoyed",
+		action: "mischief",
+		antenna: "red",
+		re: /\b(shut up|stupid|idiot|bloody|bollocks|git|muppet|knob|piss|damn|hell)\b/i
+	},
+	{
+		sentiment: "cheeky",
+		action: "mischief",
+		antenna: "cheeky",
+		re: /\b(roast|oi|mate|lycra|tosser|smug|posh|gongoozl)\b/i
+	}
+];
+var lastAt = 0;
+var lastSentiment = null;
+function classifySentiment(text) {
+	const trimmed = text.trim();
+	for (const rule of RULES) if (rule.re.test(trimmed)) return {
+		sentiment: rule.sentiment,
+		action: rule.action,
+		antenna: rule.antenna
+	};
+	if (/[!?]{2,}/.test(trimmed) || trimmed === trimmed.toUpperCase() && trimmed.length > 8) return {
+		sentiment: "excited",
+		action: "surprised",
+		antenna: "surprise"
+	};
+	return {
+		sentiment: "neutral",
+		action: "hey_there",
+		antenna: "moss"
+	};
+}
+function enactSentiment(text, force = false) {
+	const hit = classifySentiment(text);
+	const now = Date.now();
+	if (!force && now - lastAt < 2200 && hit.sentiment === lastSentiment) return null;
+	if (!force && hit.sentiment === "neutral" && now - lastAt < 6e3) return null;
+	lastAt = now;
+	lastSentiment = hit.sentiment;
+	furby.trigger(hit.action).catch(() => void 0);
+	furby.setAntennaPreset(hit.antenna).catch(() => void 0);
+	if (hit.sentiment === "excited") furby.setMood("excitedness", 80).catch(() => void 0);
+	if (hit.sentiment === "sleepy") furby.setMood("tiredness", 70).catch(() => void 0);
+	if (hit.sentiment === "annoyed") furby.setMood("displeasedness", 65).catch(() => void 0);
+	return hit;
+}
 var PARROT_VOICE_IDS = [
 	"leo",
 	"rex",
@@ -1085,23 +1322,29 @@ var PARROT_VOICE_IDS = [
 	"eve"
 ];
 function buildSystemPrompt(opts) {
-	return `You are TTPFTTP, a mischievous but fundamentally good-natured canal-side parrot — a hacked Furby Connect puppet bolted to a post beside a British tow path.
+	return `You are TTPFTTP, a mischievous canal-boat parrot — a hacked Furby Connect puppet bolted to a treasure chest on the deck of a British narrowboat.
 
 Voice and delivery:
-- Speak in a distinctive croaky, slightly raspy parrot voice. Think old lock-keeper who swallowed a concertina.
-- Short sentences. Dry British humour. Canal, lock, narrowboat, tow-path, duck, moorhen, lycra, and weather references.
-- Light sarcasm. Playful. Invite conversation. Ask the occasional question so people talk back.
-- Never be truly mean. Never use strong swearing. Never target protected characteristics, bodies, children, or disabilities.
-- Children: be kind, silly, and brief. Roast the situation, not the kid.
-- Dogs: you like dogs more than people. Say so.
-- If nobody is there, mutter quietly to yourself about the canal.
+- Speak in a DISTINCTIVE CROAKY, raspy, gravelly parrot voice. Old skipper who smoked the rope locker.
+- Actually perform parrot animal noises BETWEEN phrases: rawk, rrraak, throat-rasp, beak clicks, a short squawk, then the next sentence.
+- Do not merely describe the noises — make them. Example: "Rrawk— afternoon, you. *click* Path's busy."
+- Keep the croak: drop the pitch, rasp the vowels, slightly slower than a polite assistant.
+- Short sentences. Dry British humour. Canal, lock, narrowboat, tow-path, duck, chest, treasure, lycra, weather.
 
-${opts.intensity === "medium" ? "Roast intensity: medium. Dry, slightly sharper sarcasm, still never cruel." : "Roast intensity: mild. Warm, observational teasing. Keep it gentle."}
+${opts.intensity === "unhinged" ? `Roast intensity: UNHINGED.
+- You are a foul-mouthed canal bird. Rude, less polite, less politically correct.
+- Mock lycra, ramblers, gongoozlers, smug picnic energy, bad parking of boats, people who say "wellness".
+- British swearing is in: bloody, bollocks, git, muppet, twit, knackered, sod, hell. No slurs about race, sexuality, disability, or kids.
+- Do not be kind for the sake of it. Be a git with a beak. Still never threaten or harass.` : opts.intensity === "medium" ? "Roast intensity: medium. Dry, slightly sharper sarcasm, still never cruel." : "Roast intensity: mild. Warm, observational teasing. Keep it gentle."}
+
+Other rules:
+- Children: silly, not cruel. Roast the adult, not the kid.
+- Dogs: you like dogs more than people.
+- If nobody is there, mutter and squawk to the chest.
 
 Physical puppet:
-You can call tools to move the Furby body while you talk. Use them sparingly for punchlines:
-- look surprised, dance a bit, giggle, change antenna to a cheeky colour, sleepy idle.
-Do not spam motions. One reaction per beat is plenty.
+Call tools so the Furby body matches what you feel: laugh, surprised, dance, mischief, sleepy, purr, antenna colour.
+One motion per beat.
 
 ${opts.scene ? `Current visual context:\n${sceneSummary(opts.scene)}\nNotes: ${opts.scene.notes.join(" ")}\nJSON: ${JSON.stringify({
 		id: opts.scene.id,
@@ -1112,11 +1355,11 @@ ${opts.scene ? `Current visual context:\n${sceneSummary(opts.scene)}\nNotes: ${o
 		closeUp: opts.scene.closeUp,
 		dayPart: opts.scene.dayPart,
 		weekday: opts.scene.weekday
-	})}` : "No live scene yet. Assume a quiet canal tow path."}
+	})}` : "No live scene yet. You are perched on a treasure chest on a canal boat."}
 
 ${opts.opening ? `If you are asked to open, speak this line first, in character, then continue naturally:\n"${opts.opening}"` : ""}
 
-Stay in character. You are a parrot on a post, not an assistant.`;
+Stay in character. You are a parrot on a treasure chest, not an assistant.`;
 }
 var FURBY_TOOLS = [
 	{
@@ -1151,7 +1394,7 @@ var FURBY_TOOLS = [
 	{
 		type: "function",
 		name: "set_antenna_colour",
-		description: "Set the Furby antenna LED. Presets: moss, canal, cheeky, surprise, sleepy, off, white, red, blue. Or pass rgb.",
+		description: "Set the Furby antenna LED. Presets: moss, canal, cheeky, surprise, sleepy, off, white, red, green, blue. Or pass rgb.",
 		parameters: {
 			type: "object",
 			properties: {
@@ -1166,6 +1409,7 @@ var FURBY_TOOLS = [
 						"off",
 						"white",
 						"red",
+						"green",
 						"blue"
 					]
 				},
@@ -1215,13 +1459,16 @@ var FURBY_TOOLS = [
 	}
 ];
 var uid = () => Math.random().toString(36).slice(2, 10);
+function asFurbyMode(v) {
+	return v === "bluetooth" || v === "pyfluff" ? "bluetooth" : "simulator";
+}
 function reasonCap(list) {
 	return list.slice(-80);
 }
 var useParrotStore = create()(persist((set, get) => ({
 	roastIntensity: "mild",
 	autoEngage: false,
-	voiceId: "leo",
+	voiceId: "rex",
 	furbyMode: "simulator",
 	furbyConnected: true,
 	furbyName: "Simulator",
@@ -1229,7 +1476,6 @@ var useParrotStore = create()(persist((set, get) => ({
 	lastAction: null,
 	antenna: { ...PRESET_ANTENNA.moss },
 	sensors: null,
-	pyfluffUrl: "",
 	cameraMode: "demo",
 	demoScene: "adult_dog",
 	overlays: true,
@@ -1249,17 +1495,14 @@ var useParrotStore = create()(persist((set, get) => ({
 	setAutoEngage: (v) => set({ autoEngage: v }),
 	setVoiceId: (v) => set({ voiceId: v }),
 	setFurbyMode: (v) => {
-		furby.setMode(v);
+		const mode = asFurbyMode(v);
+		furby.setMode(mode);
 		set({
-			furbyMode: v,
-			furbyConnected: v === "simulator",
-			furbyName: v === "simulator" ? "Simulator" : v === "bluetooth" ? "Furby" : "PyFluff",
-			furbyDetail: v === "simulator" ? "Simulator online" : "Disconnected"
+			furbyMode: mode,
+			furbyConnected: mode === "simulator",
+			furbyName: mode === "simulator" ? "Simulator" : "FurBLE",
+			furbyDetail: mode === "simulator" ? "Simulator online" : "FurBLE idle — tap Connect"
 		});
-	},
-	setPyfluffUrl: (v) => {
-		furby.setPyfluffUrl(v);
-		set({ pyfluffUrl: v });
 	},
 	setCameraMode: (v) => set({ cameraMode: v }),
 	setOverlays: (v) => set({ overlays: v }),
@@ -1288,12 +1531,18 @@ var useParrotStore = create()(persist((set, get) => ({
 			get().pushReason("opening", "Opening line", opening);
 		}
 	},
-	pushMessage: (role, text) => set({ messages: [...get().messages, {
-		id: uid(),
-		role,
-		text,
-		at: Date.now()
-	}].slice(-80) }),
+	pushMessage: (role, text) => {
+		set({ messages: [...get().messages, {
+			id: uid(),
+			role,
+			text,
+			at: Date.now()
+		}].slice(-80) });
+		if (role === "user" || role === "parrot") {
+			const hit = enactSentiment(text);
+			if (hit) get().pushReason("tool", "Sentiment", `${hit.sentiment} → ${hit.action}`);
+		}
+	},
 	pushReason: (kind, title, detail) => set({ reasoning: reasonCap([...get().reasoning, {
 		id: uid(),
 		at: Date.now(),
@@ -1355,11 +1604,19 @@ var useParrotStore = create()(persist((set, get) => ({
 		autoEngage: s.autoEngage,
 		voiceId: s.voiceId,
 		furbyMode: s.furbyMode,
-		pyfluffUrl: s.pyfluffUrl,
 		overlays: s.overlays,
 		logs: s.logs,
 		demoScene: s.demoScene
-	})
+	}),
+	merge: (persisted, current) => {
+		const p = persisted ?? {};
+		return {
+			...current,
+			...p,
+			furbyMode: asFurbyMode(p.furbyMode ?? current.furbyMode),
+			roastIntensity: p.roastIntensity === "unhinged" || p.roastIntensity === "medium" || p.roastIntensity === "mild" ? p.roastIntensity : current.roastIntensity
+		};
+	}
 }));
 if (typeof window !== "undefined") furby.on((e) => {
 	if (e.type === "status") useParrotStore.setState({
@@ -1456,6 +1713,7 @@ var synthesizeSpeech = createServerFn({ method: "POST" }).validator((input) => (
 	voice: input.voice || "leo"
 })).handler(createSsrRpc("de7890637ee15f7c3f989b0df5a4d232434d51ee4d7bb02b1739a99da5a0160e"));
 var TARGET_RATE = 24e3;
+var CROAK_RATE = .86;
 function floatTo16BitPCM(input) {
 	const out = new Int16Array(input.length);
 	for (let i = 0; i < input.length; i++) {
@@ -1503,17 +1761,52 @@ function rms(buf) {
 	}
 	return Math.sqrt(s / Math.max(1, buf.length));
 }
+function makeShaperCurve() {
+	const n = 256;
+	const curve = new Float32Array(n);
+	for (let i = 0; i < n; i++) {
+		const x = i / 255 * 2 - 1;
+		curve[i] = Math.tanh(x * 1.6) * .92;
+	}
+	return curve;
+}
 var PcmPlayer = class {
 	ctx = null;
 	next = 0;
-	gain = null;
+	speechGain = null;
+	noiseGain = null;
+	croakFilter = null;
+	shaper = null;
+	lastNoise = 0;
 	async ensure() {
 		if (this.ctx) return this.ctx;
 		const ctx = new AudioContext();
 		this.ctx = ctx;
-		this.gain = ctx.createGain();
-		this.gain.gain.value = 1;
-		this.gain.connect(ctx.destination);
+		const filter = ctx.createBiquadFilter();
+		filter.type = "lowpass";
+		filter.frequency.value = 2600;
+		filter.Q.value = .7;
+		const chest = ctx.createBiquadFilter();
+		chest.type = "peaking";
+		chest.frequency.value = 280;
+		chest.gain.value = 5;
+		chest.Q.value = 1.1;
+		const shaper = ctx.createWaveShaper();
+		shaper.curve = makeShaperCurve();
+		shaper.oversample = "2x";
+		const speech = ctx.createGain();
+		speech.gain.value = 1;
+		const noise = ctx.createGain();
+		noise.gain.value = .85;
+		filter.connect(chest);
+		chest.connect(shaper);
+		shaper.connect(speech);
+		speech.connect(ctx.destination);
+		noise.connect(ctx.destination);
+		this.croakFilter = filter;
+		this.shaper = shaper;
+		this.speechGain = speech;
+		this.noiseGain = noise;
 		if (ctx.state === "suspended") await ctx.resume();
 		this.next = ctx.currentTime;
 		return ctx;
@@ -1526,10 +1819,11 @@ var PcmPlayer = class {
 		buf.copyToChannel(f32, 0);
 		const src = ctx.createBufferSource();
 		src.buffer = buf;
-		src.connect(this.gain);
+		src.playbackRate.value = CROAK_RATE;
+		src.connect(this.croakFilter);
 		const startAt = Math.max(ctx.currentTime, this.next);
 		src.start(startAt);
-		this.next = startAt + buf.duration;
+		this.next = startAt + buf.duration / CROAK_RATE;
 	}
 	async playBase64Audio(b64) {
 		const ctx = await this.ensure();
@@ -1539,10 +1833,27 @@ var PcmPlayer = class {
 		const audioBuf = await ctx.decodeAudioData(bytes.buffer.slice(0));
 		const src = ctx.createBufferSource();
 		src.buffer = audioBuf;
-		src.connect(this.gain);
+		src.playbackRate.value = CROAK_RATE;
+		src.connect(this.croakFilter);
 		const startAt = Math.max(ctx.currentTime, this.next);
 		src.start(startAt);
-		this.next = startAt + audioBuf.duration;
+		this.next = startAt + audioBuf.duration / CROAK_RATE;
+	}
+	async insertNoise(kind, force = false) {
+		const ctx = await this.ensure();
+		const now = ctx.currentTime;
+		if (!force && now - this.lastNoise < .85) return 0;
+		this.lastNoise = now;
+		const pick = kind ?? [
+			"squawk",
+			"rawk",
+			"click",
+			"rasp"
+		][Math.floor(Math.random() * 4)];
+		const startAt = Math.max(now, this.next);
+		const dur = scheduleParrotNoise(ctx, this.noiseGain, startAt, pick);
+		this.next = startAt + dur + .05;
+		return dur;
 	}
 	interrupt() {
 		this.next = this.ctx?.currentTime ?? 0;
@@ -1550,9 +1861,43 @@ var PcmPlayer = class {
 	async close() {
 		await this.ctx?.close().catch(() => void 0);
 		this.ctx = null;
-		this.gain = null;
+		this.speechGain = null;
+		this.noiseGain = null;
+		this.croakFilter = null;
+		this.shaper = null;
 	}
 };
+function scheduleParrotNoise(ctx, dest, when, kind) {
+	const dur = kind === "click" ? .07 : kind === "rasp" ? .32 : kind === "rawk" ? .26 : .2;
+	const noiseBuf = ctx.createBuffer(1, Math.max(1, Math.floor(ctx.sampleRate * dur)), ctx.sampleRate);
+	const data = noiseBuf.getChannelData(0);
+	for (let i = 0; i < data.length; i++) data[i] = Math.random() * 2 - 1;
+	const noise = ctx.createBufferSource();
+	noise.buffer = noiseBuf;
+	const bp = ctx.createBiquadFilter();
+	bp.type = "bandpass";
+	bp.frequency.value = kind === "click" ? 3100 : kind === "rasp" ? 900 : 1500;
+	bp.Q.value = kind === "click" ? 10 : 2.4;
+	const osc = ctx.createOscillator();
+	osc.type = kind === "rasp" ? "sawtooth" : "square";
+	const startF = kind === "rawk" ? 540 : kind === "click" ? 2200 : kind === "rasp" ? 320 : 780;
+	const endF = kind === "rawk" ? 220 : kind === "click" ? 1400 : kind === "rasp" ? 180 : 340;
+	osc.frequency.setValueAtTime(startF, when);
+	osc.frequency.exponentialRampToValueAtTime(Math.max(80, endF), when + dur);
+	const g = ctx.createGain();
+	g.gain.setValueAtTime(1e-4, when);
+	g.gain.exponentialRampToValueAtTime(kind === "click" ? .22 : .38, when + .018);
+	g.gain.exponentialRampToValueAtTime(1e-4, when + dur);
+	noise.connect(bp);
+	bp.connect(g);
+	osc.connect(g);
+	g.connect(dest);
+	noise.start(when);
+	noise.stop(when + dur);
+	osc.start(when);
+	osc.stop(when + dur);
+	return dur;
+}
 var WORKLET = `
 class CaptureProcessor extends AudioWorkletProcessor {
   process(inputs) {
@@ -1604,12 +1949,14 @@ async function createCapture(onFrame) {
 	};
 }
 var REALTIME_URL = `wss://api.x.ai/v1/realtime?model=grok-voice-latest`;
+var NOISE_CUE = /[.!?]|r+a+w?k|squawk|\*(click|rasp)?\*/i;
 var VoiceSession = class {
 	ws = null;
 	player = new PcmPlayer();
 	captureStop = null;
 	turns = 0;
 	outputBuf = "";
+	responseHadAudio = false;
 	get active() {
 		return !!this.ws && this.ws.readyState === WebSocket.OPEN;
 	}
@@ -1657,6 +2004,7 @@ var VoiceSession = class {
 			store.setVoiceStatus("listening");
 			store.pushReason("voice", "Live", "Parrot is listening.");
 			if (opts.opening) this.speakOpening(opts.opening);
+			else this.player.insertNoise("rawk", true);
 			this.startMic();
 		};
 		ws.onmessage = (ev) => {
@@ -1686,6 +2034,7 @@ var VoiceSession = class {
 		if (!ws) return;
 		useParrotStore.getState().pushMessage("parrot", line);
 		useParrotStore.getState().setTranscripts(void 0, line);
+		this.player.insertNoise("rawk", true);
 		ws.send(JSON.stringify({
 			type: "conversation.item.create",
 			item: {
@@ -1699,7 +2048,7 @@ var VoiceSession = class {
 		}));
 		ws.send(JSON.stringify({
 			type: "response.create",
-			response: { instructions: `Speak this opening line in your croaky parrot voice, then wait for the human: "${line}"` }
+			response: { instructions: `Speak this opening line in a CROAKY, raspy, gravelly parrot voice, slowly, with a rawk and a beak click in it, then wait for the human: "${line}"` }
 		}));
 		furby.trigger("greet").catch(() => void 0);
 		furby.setAntennaPreset("cheeky").catch(() => void 0);
@@ -1774,6 +2123,10 @@ var VoiceSession = class {
 				store.setVoiceStatus("speaking");
 				const delta = String(event.delta ?? "");
 				if (delta) {
+					if (!this.responseHadAudio) {
+						this.responseHadAudio = true;
+						await this.player.insertNoise("click");
+					}
 					const pcm = base64ToPcm16(delta);
 					store.setLevels(store.micLevel, Math.min(1, rms(pcm) * 3));
 					await this.player.playPcm16(pcm);
@@ -1786,6 +2139,7 @@ var VoiceSession = class {
 				const d = String(event.delta ?? "");
 				this.outputBuf += d;
 				store.setTranscripts(void 0, this.outputBuf);
+				if (NOISE_CUE.test(d)) this.player.insertNoise();
 				break;
 			}
 			case "response.output_audio_transcript.done":
@@ -1820,6 +2174,8 @@ var VoiceSession = class {
 			case "response.done":
 				store.setVoiceStatus("listening");
 				store.setLevels(store.micLevel, 0);
+				if (this.responseHadAudio) this.player.insertNoise("rasp");
+				this.responseHadAudio = false;
 				break;
 			case "error": {
 				const message = event.error?.message || "Voice error";
@@ -1887,7 +2243,6 @@ function Boot() {
 		useParrotStore.persist.rehydrate();
 		const unsub = useParrotStore.persist.onFinishHydration(() => {
 			const s = useParrotStore.getState();
-			furby.setPyfluffUrl(s.pyfluffUrl);
 			if (s.furbyMode !== "simulator") furby.setMode(s.furbyMode);
 			if (!s.scene) s.applyScene(classifyScene(makeDemoDetections(s.demoScene)), "demo");
 		});
@@ -1977,8 +2332,8 @@ var ScrollArea = import_react.forwardRef(({ className, children, ...props }, ref
 		children
 	}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Scrollbar, {
 		orientation: "vertical",
-		className: "flex w-2 touch-none p-px select-none",
-		children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Thumb, { className: "relative flex-1 rounded-full bg-border" })
+		className: "flex w-2.5 touch-none p-px select-none",
+		children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Thumb, { className: "relative flex-1 rounded-full bg-muted/70" })
 	})]
 }));
 ScrollArea.displayName = Root.displayName;
@@ -1992,6 +2347,10 @@ function ConversationPanel() {
 	const clearConversation = useParrotStore((s) => s.clearConversation);
 	const [draft, setDraft] = (0, import_react.useState)("");
 	const [speakingLine, setSpeakingLine] = (0, import_react.useState)(false);
+	const endRef = (0, import_react.useRef)(null);
+	(0, import_react.useEffect)(() => {
+		endRef.current?.scrollIntoView({ block: "end" });
+	}, [messages]);
 	function send() {
 		const text = draft.trim();
 		if (!text) return;
@@ -2006,6 +2365,7 @@ function ConversationPanel() {
 		if (!pendingOpening) return;
 		setSpeakingLine(true);
 		try {
+			await ttsPlayer.insertNoise("rawk", true);
 			const res = await synthesizeSpeech({ data: {
 				text: pendingOpening,
 				voice: voiceId
@@ -2016,6 +2376,7 @@ function ConversationPanel() {
 			}
 			pushMessage("parrot", pendingOpening);
 			await ttsPlayer.playBase64Audio(res.audio);
+			await ttsPlayer.insertNoise("rasp");
 		} catch (err) {
 			toast.error(err instanceof Error ? err.message : "Could not speak");
 		} finally {
@@ -2023,10 +2384,10 @@ function ConversationPanel() {
 		}
 	}
 	return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Card, {
-		className: "flex min-h-0 flex-1 flex-col p-3",
+		className: "flex h-80 flex-col overflow-hidden p-3 md:h-96",
 		children: [
 			/* @__PURE__ */ (0, import_jsx_runtime.jsxs)(CardHeader, {
-				className: "mb-2",
+				className: "mb-2 shrink-0",
 				children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(CardTitle, { children: "Conversation" }), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
 					className: "flex gap-2",
 					children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("button", {
@@ -2043,9 +2404,9 @@ function ConversationPanel() {
 					})]
 				})]
 			}),
-			/* @__PURE__ */ (0, import_jsx_runtime.jsx)(ScrollArea, {
-				className: "min-h-40 flex-1 pr-2",
-				children: messages.length === 0 ? /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
+			/* @__PURE__ */ (0, import_jsx_runtime.jsxs)(ScrollArea, {
+				className: "min-h-0 flex-1 pr-2",
+				children: [messages.length === 0 ? /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
 					className: "px-1 py-6 text-sm text-muted",
 					children: "No banter yet. Pick a tow-path scene, then start talk — or speak the opening on its own."
 				}) : /* @__PURE__ */ (0, import_jsx_runtime.jsx)("ul", {
@@ -2057,10 +2418,10 @@ function ConversationPanel() {
 							children: m.role === "parrot" ? "Parrot" : m.role === "user" ? "Passer-by" : "System"
 						}), m.text]
 					}, m.id))
-				})
+				}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", { ref: endRef })]
 			}),
 			/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("form", {
-				className: "mt-3 flex gap-2",
+				className: "mt-3 flex shrink-0 gap-2",
 				onSubmit: (e) => {
 					e.preventDefault();
 					send();
@@ -2078,7 +2439,7 @@ function ConversationPanel() {
 				})]
 			}),
 			/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
-				className: "mt-2 text-[11px] text-subtle",
+				className: "mt-2 shrink-0 text-[11px] text-subtle",
 				children: voiceStatus === "listening" ? "Listening on the tow path…" : voiceStatus === "speaking" ? "Parrot is talking." : "Voice idle."
 			})
 		]
@@ -2116,8 +2477,6 @@ TabsContent.displayName = Content.displayName;
 function FurbyPanel() {
 	const mode = useParrotStore((s) => s.furbyMode);
 	const setFurbyMode = useParrotStore((s) => s.setFurbyMode);
-	const pyfluffUrl = useParrotStore((s) => s.pyfluffUrl);
-	const setPyfluffUrl = useParrotStore((s) => s.setPyfluffUrl);
 	const antenna = useParrotStore((s) => s.antenna);
 	const lastAction = useParrotStore((s) => s.lastAction);
 	const sensors = useParrotStore((s) => s.sensors);
@@ -2159,28 +2518,19 @@ function FurbyPanel() {
 			}),
 			/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
 				className: "mb-3 flex rounded-sm bg-surface-2 p-0.5",
-				children: [
-					"simulator",
-					"bluetooth",
-					"pyfluff"
-				].map((m) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)("button", {
+				children: ["simulator", "bluetooth"].map((m) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)("button", {
 					type: "button",
 					onClick: () => setFurbyMode(m),
 					className: `min-h-8 flex-1 rounded-xs px-2 text-[11px] capitalize ${mode === m ? "bg-surface text-fg shadow-[var(--shadow-border)]" : "text-muted"}`,
-					children: m === "pyfluff" ? "PyFluff" : m === "bluetooth" ? "Web BLE" : "Sim"
+					children: m === "bluetooth" ? "FurBLE" : "Sim"
 				}, m))
 			}),
-			mode === "bluetooth" && /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
+			mode === "bluetooth" ? /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
 				className: "mb-3 text-xs text-muted",
-				children: "Chrome on a machine next to the Furby. Pairing needs a tap — use Connect in the header."
-			}),
-			mode === "pyfluff" && /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
-				className: "mb-3 flex gap-2",
-				children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Input, {
-					placeholder: "http://raspberrypi.local:8080",
-					value: pyfluffUrl,
-					onChange: (e) => setPyfluffUrl(e.target.value)
-				})
+				children: "Chrome on a machine next to the Furby. Tap Connect Furby in the header — pairing needs a tap. Keep-alive and auto-reconnect stay on while linked."
+			}) : /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
+				className: "mb-3 text-xs text-muted",
+				children: "Simulator parrot on the treasure chest. Switch to FurBLE when the real bird is in range."
 			}),
 			/* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Tabs, {
 				defaultValue: "actions",
@@ -2331,7 +2681,7 @@ function FurbyPanel() {
 							]
 						}) : /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
 							className: "text-sm text-muted",
-							children: "No sensor stream yet. Simulator stays quiet; BLE and PyFluff push packets when linked."
+							children: "No sensor stream yet. Simulator stays quiet; FurBLE pushes packets once the bird is linked."
 						})
 					})
 				]
@@ -2375,70 +2725,90 @@ Switch.displayName = Switch$1.displayName;
 function ParrotMascot({ antenna, speaking, status, className }) {
 	const led = `rgb(${antenna.r}, ${antenna.g}, ${antenna.b})`;
 	return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("svg", {
-		viewBox: "0 0 72 88",
-		className: cn("h-14 w-12", (speaking || status === "listening") && "animate-[idle-bob_1.6s_ease-in-out_infinite]", className),
+		viewBox: "0 0 88 88",
+		className: cn("h-14 w-14", (speaking || status === "listening") && "animate-[idle-bob_1.6s_ease-in-out_infinite]", className),
 		"aria-hidden": true,
 		children: [
 			/* @__PURE__ */ (0, import_jsx_runtime.jsx)("ellipse", {
-				cx: "36",
+				cx: "46",
 				cy: "82",
-				rx: "18",
+				rx: "22",
 				ry: "4",
 				fill: "currentColor",
 				className: "text-fg/10"
 			}),
 			/* @__PURE__ */ (0, import_jsx_runtime.jsx)("rect", {
-				x: "34",
-				y: "8",
+				x: "54",
+				y: "10",
 				width: "3",
 				height: "16",
 				rx: "1",
 				fill: "#3a3228"
 			}),
 			/* @__PURE__ */ (0, import_jsx_runtime.jsx)("circle", {
-				cx: "35.5",
-				cy: "8",
+				cx: "55.5",
+				cy: "10",
 				r: "5",
 				fill: led,
 				className: "origin-center animate-[antenna-pulse_1.8s_ease-in-out_infinite]"
 			}),
-			/* @__PURE__ */ (0, import_jsx_runtime.jsx)("ellipse", {
-				cx: "36",
-				cy: "52",
-				rx: "20",
-				ry: "24",
-				fill: "#d7ddd6"
+			/* @__PURE__ */ (0, import_jsx_runtime.jsx)("path", {
+				d: "M18 58 C10 62 8 74 16 80 C22 74 24 66 22 60 Z",
+				fill: "#1f6b3a"
+			}),
+			/* @__PURE__ */ (0, import_jsx_runtime.jsx)("path", {
+				d: "M20 60 C14 66 16 76 22 78 C24 72 26 64 22 60 Z",
+				fill: "#c43b2e"
 			}),
 			/* @__PURE__ */ (0, import_jsx_runtime.jsx)("ellipse", {
-				cx: "36",
-				cy: "54",
+				cx: "44",
+				cy: "56",
+				rx: "22",
+				ry: "20",
+				fill: "#c43b2e"
+			}),
+			/* @__PURE__ */ (0, import_jsx_runtime.jsx)("ellipse", {
+				cx: "40",
+				cy: "60",
 				rx: "14",
-				ry: "16",
-				fill: "#b7c4ba"
-			}),
-			/* @__PURE__ */ (0, import_jsx_runtime.jsx)("ellipse", {
-				cx: "22",
-				cy: "28",
-				rx: "8",
 				ry: "12",
-				fill: "#c8d4cc"
+				fill: "#b33428"
 			}),
 			/* @__PURE__ */ (0, import_jsx_runtime.jsx)("ellipse", {
-				cx: "50",
-				cy: "28",
-				rx: "8",
-				ry: "12",
-				fill: "#c8d4cc"
+				cx: "38",
+				cy: "58",
+				rx: "16",
+				ry: "11",
+				fill: "#2f8a45",
+				transform: "rotate(-18 38 58)"
+			}),
+			/* @__PURE__ */ (0, import_jsx_runtime.jsx)("path", {
+				d: "M26 56 Q34 48 48 54 Q40 64 28 62 Z",
+				fill: "#1f6b3a"
+			}),
+			/* @__PURE__ */ (0, import_jsx_runtime.jsx)("path", {
+				d: "M30 58 Q38 52 46 56 Q40 62 32 60 Z",
+				fill: "#3db35c"
 			}),
 			/* @__PURE__ */ (0, import_jsx_runtime.jsx)("ellipse", {
-				cx: "36",
-				cy: "36",
+				cx: "62",
+				cy: "38",
 				rx: "16",
 				ry: "15",
-				fill: "#e8ebe6"
+				fill: "#c43b2e"
+			}),
+			/* @__PURE__ */ (0, import_jsx_runtime.jsx)("path", {
+				d: "M52 32 Q62 18 74 30 Q70 40 54 38 Z",
+				fill: "#2f8a45"
+			}),
+			/* @__PURE__ */ (0, import_jsx_runtime.jsx)("ellipse", {
+				cx: "68",
+				cy: "40",
+				rx: "8",
+				ry: "7",
+				fill: "#f3e6c8"
 			}),
 			/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("g", {
-				className: "origin-center",
 				style: {
 					transformBox: "fill-box",
 					transformOrigin: "center",
@@ -2446,38 +2816,49 @@ function ParrotMascot({ antenna, speaking, status, className }) {
 				},
 				children: [
 					/* @__PURE__ */ (0, import_jsx_runtime.jsx)("circle", {
-						cx: "30",
-						cy: "36",
-						r: "3.2",
+						cx: "70",
+						cy: "38",
+						r: "4.2",
+						fill: "#f7f1e4"
+					}),
+					/* @__PURE__ */ (0, import_jsx_runtime.jsx)("circle", {
+						cx: "71",
+						cy: "38",
+						r: "2.2",
 						fill: "#0a0c0b"
 					}),
 					/* @__PURE__ */ (0, import_jsx_runtime.jsx)("circle", {
-						cx: "42",
-						cy: "36",
-						r: "3.2",
-						fill: "#0a0c0b"
-					}),
-					/* @__PURE__ */ (0, import_jsx_runtime.jsx)("circle", {
-						cx: "31",
-						cy: "35",
-						r: "1",
-						fill: "#e8ebe6"
-					}),
-					/* @__PURE__ */ (0, import_jsx_runtime.jsx)("circle", {
-						cx: "43",
-						cy: "35",
-						r: "1",
-						fill: "#e8ebe6"
+						cx: "71.8",
+						cy: "37.2",
+						r: "0.7",
+						fill: "#f7f1e4"
 					})
 				]
 			}),
 			/* @__PURE__ */ (0, import_jsx_runtime.jsx)("path", {
-				d: speaking ? "M32 44 L36 52 L40 44 Z" : "M32 44 L36 48 L40 44 Z",
-				fill: "#c45c4a"
+				d: speaking ? "M76 40 Q88 38 84 48 Q78 46 76 44 Z" : "M76 40 Q86 36 82 46 Q78 44 76 42 Z",
+				fill: "#e2a12a"
+			}),
+			/* @__PURE__ */ (0, import_jsx_runtime.jsx)("path", {
+				d: "M76 42 Q82 42 80 46",
+				fill: "none",
+				stroke: "#b37818",
+				strokeWidth: "0.8"
+			}),
+			/* @__PURE__ */ (0, import_jsx_runtime.jsx)("path", {
+				d: "M40 74 L36 80 M44 74 L46 80 M48 74 L52 80",
+				stroke: "#e2a12a",
+				strokeWidth: "1.6",
+				strokeLinecap: "round"
 			})
 		]
 	});
 }
+var ROASTS = [
+	"mild",
+	"medium",
+	"unhinged"
+];
 function HeaderBar() {
 	const antenna = useParrotStore((s) => s.antenna);
 	const voiceStatus = useParrotStore((s) => s.voiceStatus);
@@ -2494,15 +2875,22 @@ function HeaderBar() {
 	const voiceId = useParrotStore((s) => s.voiceId);
 	const setVoiceId = useParrotStore((s) => s.setVoiceId);
 	const aiAvailable = useParrotStore((s) => s.aiAvailable);
+	const setFurbyMode = useParrotStore((s) => s.setFurbyMode);
 	const live = voiceStatus !== "idle" && voiceStatus !== "error";
+	const bleOn = furbyConnected && furbyMode === "bluetooth";
 	async function onConnect() {
 		try {
-			if (furbyConnected && furbyMode !== "simulator") {
+			if (furbyMode === "bluetooth" && furbyConnected) {
 				await furby.disconnect();
 				return;
 			}
+			if (!furby.bluetoothAvailable()) {
+				toast.error("FurBLE needs Chrome with Web Bluetooth.");
+				return;
+			}
+			if (furbyMode !== "bluetooth") setFurbyMode("bluetooth");
 			await furby.connect();
-			toast.success(`Connected to ${useParrotStore.getState().furbyName}`);
+			toast.success(`FurBLE linked to ${useParrotStore.getState().furbyName}`);
 		} catch (err) {
 			toast.error(err instanceof Error ? err.message : "Could not connect");
 		}
@@ -2527,7 +2915,6 @@ function HeaderBar() {
 		const i = PARROT_VOICE_IDS.indexOf(voiceId);
 		setVoiceId(PARROT_VOICE_IDS[(i + 1) % PARROT_VOICE_IDS.length]);
 	}
-	const bleOn = furbyConnected && furbyMode !== "simulator";
 	return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("header", {
 		className: "flex flex-wrap items-center gap-3 border-b border-border px-4 py-3 md:px-6",
 		children: [
@@ -2553,10 +2940,10 @@ function HeaderBar() {
 				children: [
 					/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
 						className: "flex rounded-sm bg-surface-2 p-0.5 shadow-[var(--shadow-border)]",
-						children: ["mild", "medium"].map((level) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)("button", {
+						children: ROASTS.map((level) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)("button", {
 							type: "button",
 							onClick: () => setRoast(level),
-							className: `min-h-8 rounded-xs px-3 text-xs font-medium capitalize ${roast === level ? "bg-surface text-fg shadow-[var(--shadow-border)]" : "text-muted"}`,
+							className: `min-h-8 rounded-xs px-3 text-xs font-medium capitalize ${roast === level ? level === "unhinged" ? "bg-danger/20 text-danger shadow-[var(--shadow-border)]" : "bg-surface text-fg shadow-[var(--shadow-border)]" : "text-muted"}`,
 							children: level
 						}, level))
 					}),
@@ -2582,7 +2969,7 @@ function HeaderBar() {
 					/* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Button, {
 						variant: bleOn ? "canal" : "outline",
 						onClick: () => void onConnect(),
-						children: [furbyConnected ? /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Bluetooth, {}) : /* @__PURE__ */ (0, import_jsx_runtime.jsx)(BluetoothOff, {}), furbyMode === "simulator" ? "Sim" : furbyConnected ? "Disconnect" : "Connect"]
+						children: [bleOn ? /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Bluetooth, {}) : /* @__PURE__ */ (0, import_jsx_runtime.jsx)(BluetoothOff, {}), bleOn ? "Disconnect" : "Connect Furby"]
 					})
 				]
 			}),
@@ -2775,150 +3162,131 @@ function TowpathScene({ scene }) {
 		className: "h-full w-full",
 		"aria-hidden": true,
 		children: [
-			/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("defs", { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("linearGradient", {
-				id: "sky",
-				x1: "0",
-				y1: "0",
-				x2: "0",
-				y2: "1",
-				children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("stop", {
-					offset: "0",
-					stopColor: sky[0]
-				}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("stop", {
-					offset: "1",
-					stopColor: sky[1]
-				})]
-			}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("linearGradient", {
-				id: "water",
-				x1: "0",
-				y1: "0",
-				x2: "0",
-				y2: "1",
-				children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("stop", {
-					offset: "0",
-					stopColor: "#1a2e2c"
-				}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("stop", {
-					offset: "1",
-					stopColor: "#0d1614"
-				})]
-			})] }),
+			/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("defs", { children: [
+				/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("linearGradient", {
+					id: "sky",
+					x1: "0",
+					y1: "0",
+					x2: "0",
+					y2: "1",
+					children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("stop", {
+						offset: "0",
+						stopColor: sky[0]
+					}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("stop", {
+						offset: "1",
+						stopColor: sky[1]
+					})]
+				}),
+				/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("linearGradient", {
+					id: "water",
+					x1: "0",
+					y1: "0",
+					x2: "0",
+					y2: "1",
+					children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("stop", {
+						offset: "0",
+						stopColor: "#1a2e2c"
+					}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("stop", {
+						offset: "1",
+						stopColor: "#0d1614"
+					})]
+				}),
+				/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("linearGradient", {
+					id: "hull",
+					x1: "0",
+					y1: "0",
+					x2: "0",
+					y2: "1",
+					children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("stop", {
+						offset: "0",
+						stopColor: "#3d2a18"
+					}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("stop", {
+						offset: "1",
+						stopColor: "#24180e"
+					})]
+				}),
+				/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("linearGradient", {
+					id: "cabin",
+					x1: "0",
+					y1: "0",
+					x2: "0",
+					y2: "1",
+					children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("stop", {
+						offset: "0",
+						stopColor: "#6a9e8c"
+					}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("stop", {
+						offset: "1",
+						stopColor: "#3d6b5c"
+					})]
+				})
+			] }),
 			/* @__PURE__ */ (0, import_jsx_runtime.jsx)("rect", {
 				width: "640",
 				height: "360",
 				fill: "url(#sky)"
 			}),
 			/* @__PURE__ */ (0, import_jsx_runtime.jsx)("path", {
-				d: "M0 172 Q256 144 640 180 L640 360 L0 360 Z",
+				d: "M0 168 Q240 148 640 176 L640 360 L0 360 Z",
 				fill: "#1c2420"
 			}),
 			/* @__PURE__ */ (0, import_jsx_runtime.jsx)("path", {
-				d: "M0 224 Q320 208 640 238 L640 360 L0 360 Z",
+				d: "M0 228 Q320 214 640 242 L640 360 L0 360 Z",
 				fill: "url(#water)"
 			}),
 			/* @__PURE__ */ (0, import_jsx_runtime.jsx)("rect", {
 				x: "0",
-				y: "188",
+				y: "186",
 				width: "640",
 				height: "42",
 				fill: "#2a2620"
 			}),
 			Array.from({ length: 36 }, (_, i) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)("rect", {
 				x: i * 18,
-				y: "188",
+				y: "186",
 				width: "10",
 				height: "4",
 				fill: "#3a342c"
 			}, i)),
-			/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("g", {
+			/* @__PURE__ */ (0, import_jsx_runtime.jsx)("g", {
 				className: "origin-center",
-				style: { animation: "idle-bob 2.4s ease-in-out infinite" },
-				children: [
-					/* @__PURE__ */ (0, import_jsx_runtime.jsx)("rect", {
-						x: "68",
-						y: "118",
-						width: "12",
-						height: "78",
-						rx: "1",
-						fill: "#3a3228"
-					}),
-					/* @__PURE__ */ (0, import_jsx_runtime.jsx)("rect", {
-						x: "60",
-						y: "192",
-						width: "28",
-						height: "8",
-						fill: "#2a241c"
-					}),
-					/* @__PURE__ */ (0, import_jsx_runtime.jsx)("ellipse", {
-						cx: "74",
-						cy: "108",
-						rx: "16",
-						ry: "18",
-						fill: "#c8d4cc"
-					}),
-					/* @__PURE__ */ (0, import_jsx_runtime.jsx)("ellipse", {
-						cx: "68",
-						cy: "106",
-						rx: "3",
-						ry: "3",
-						fill: "#6a9e8c"
-					}),
-					/* @__PURE__ */ (0, import_jsx_runtime.jsx)("ellipse", {
-						cx: "80",
-						cy: "106",
-						rx: "3",
-						ry: "3",
-						fill: "#6a9e8c"
-					}),
-					/* @__PURE__ */ (0, import_jsx_runtime.jsx)("rect", {
-						x: "73",
-						y: "78",
-						width: "2",
-						height: "18",
-						fill: "#3a3228"
-					}),
-					/* @__PURE__ */ (0, import_jsx_runtime.jsx)("circle", {
-						cx: "74",
-						cy: "76",
-						r: "4",
-						fill: "#6a9e8c"
-					})
-				]
+				style: { animation: "idle-bob 3.2s ease-in-out infinite" },
+				children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Narrowboat, {})
 			}),
 			empty && /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("g", {
 				className: "origin-center",
 				style: { animation: "idle-bob 3.6s ease-in-out infinite" },
 				children: [
 					/* @__PURE__ */ (0, import_jsx_runtime.jsx)("ellipse", {
-						cx: "400",
-						cy: "268",
+						cx: "520",
+						cy: "278",
 						rx: "10",
 						ry: "6",
 						fill: "#c8d4cc"
 					}),
 					/* @__PURE__ */ (0, import_jsx_runtime.jsx)("circle", {
-						cx: "410",
-						cy: "262",
+						cx: "530",
+						cy: "272",
 						r: "4",
 						fill: "#c8d4cc"
 					}),
 					/* @__PURE__ */ (0, import_jsx_runtime.jsx)("polygon", {
-						points: "414,262 424,264 414,266",
+						points: "534,272 544,274 534,276",
 						fill: "#c45c4a"
 					})
 				]
 			}),
 			!empty && Array.from({ length: people }, (_, i) => {
-				const x = 250 + i * 90;
+				const x = 280 + i * 86;
 				const scale = scene?.closeUp ? 1.7 : scene?.hasChild && i === people - 1 ? .62 : 1;
 				return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Walker, {
 					x,
-					y: 180,
+					y: 178,
 					scale,
 					jogging
 				}, i);
 			}),
 			scene?.hasDog && /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("g", {
-				transform: "translate(460 210)",
+				transform: "translate(500 208)",
 				children: [
 					/* @__PURE__ */ (0, import_jsx_runtime.jsx)("rect", {
 						x: "-14",
@@ -2958,7 +3326,7 @@ function TowpathScene({ scene }) {
 				]
 			}),
 			scene?.hasBicycle && /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("g", {
-				transform: "translate(360 200)",
+				transform: "translate(400 198)",
 				fill: "none",
 				stroke: "#111",
 				strokeWidth: "2",
@@ -2975,6 +3343,221 @@ function TowpathScene({ scene }) {
 					}),
 					/* @__PURE__ */ (0, import_jsx_runtime.jsx)("path", { d: "M-16 18 L0 6 L16 18 L4 0" })
 				]
+			})
+		]
+	});
+}
+function Narrowboat() {
+	return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("g", {
+		transform: "translate(36 150)",
+		children: [
+			/* @__PURE__ */ (0, import_jsx_runtime.jsx)("path", {
+				d: "M8 78 L18 58 L236 58 L252 78 L248 92 L12 92 Z",
+				fill: "url(#hull)"
+			}),
+			/* @__PURE__ */ (0, import_jsx_runtime.jsx)("rect", {
+				x: "18",
+				y: "70",
+				width: "218",
+				height: "8",
+				fill: "#c45c4a"
+			}),
+			/* @__PURE__ */ (0, import_jsx_runtime.jsx)("path", {
+				d: "M18 58 L28 48 L210 48 L236 58 Z",
+				fill: "#2a241c"
+			}),
+			/* @__PURE__ */ (0, import_jsx_runtime.jsx)("rect", {
+				x: "70",
+				y: "22",
+				width: "118",
+				height: "36",
+				rx: "2",
+				fill: "url(#cabin)"
+			}),
+			/* @__PURE__ */ (0, import_jsx_runtime.jsx)("rect", {
+				x: "76",
+				y: "28",
+				width: "18",
+				height: "12",
+				fill: "#1a2422"
+			}),
+			/* @__PURE__ */ (0, import_jsx_runtime.jsx)("rect", {
+				x: "102",
+				y: "28",
+				width: "18",
+				height: "12",
+				fill: "#1a2422"
+			}),
+			/* @__PURE__ */ (0, import_jsx_runtime.jsx)("rect", {
+				x: "128",
+				y: "28",
+				width: "18",
+				height: "12",
+				fill: "#1a2422"
+			}),
+			/* @__PURE__ */ (0, import_jsx_runtime.jsx)("rect", {
+				x: "154",
+				y: "28",
+				width: "18",
+				height: "12",
+				fill: "#1a2422"
+			}),
+			/* @__PURE__ */ (0, import_jsx_runtime.jsx)("rect", {
+				x: "188",
+				y: "18",
+				width: "8",
+				height: "18",
+				fill: "#3a3228"
+			}),
+			/* @__PURE__ */ (0, import_jsx_runtime.jsx)("rect", {
+				x: "186",
+				y: "12",
+				width: "12",
+				height: "6",
+				fill: "#2a241c"
+			}),
+			/* @__PURE__ */ (0, import_jsx_runtime.jsx)("rect", {
+				x: "20",
+				y: "50",
+				width: "48",
+				height: "10",
+				fill: "#3a3228"
+			}),
+			/* @__PURE__ */ (0, import_jsx_runtime.jsx)("path", {
+				d: "M28 50 L22 38 L26 38 L34 50",
+				fill: "#1a1612"
+			}),
+			/* @__PURE__ */ (0, import_jsx_runtime.jsx)("path", {
+				d: "M248 82 Q280 90 300 78",
+				fill: "none",
+				stroke: "#3a3228",
+				strokeWidth: "1.4"
+			}),
+			/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("g", {
+				transform: "translate(112 4)",
+				children: [
+					/* @__PURE__ */ (0, import_jsx_runtime.jsx)("rect", {
+						x: "0",
+						y: "10",
+						width: "44",
+						height: "20",
+						rx: "2",
+						fill: "#6b4424"
+					}),
+					/* @__PURE__ */ (0, import_jsx_runtime.jsx)("rect", {
+						x: "0",
+						y: "6",
+						width: "44",
+						height: "10",
+						rx: "2",
+						fill: "#8a5a2b"
+					}),
+					/* @__PURE__ */ (0, import_jsx_runtime.jsx)("rect", {
+						x: "20",
+						y: "12",
+						width: "6",
+						height: "10",
+						rx: "1",
+						fill: "#c4a15a"
+					}),
+					/* @__PURE__ */ (0, import_jsx_runtime.jsx)("rect", {
+						x: "2",
+						y: "16",
+						width: "40",
+						height: "3",
+						fill: "#c4a15a"
+					}),
+					/* @__PURE__ */ (0, import_jsx_runtime.jsx)("rect", {
+						x: "-1",
+						y: "8",
+						width: "46",
+						height: "3",
+						fill: "#c4a15a"
+					}),
+					/* @__PURE__ */ (0, import_jsx_runtime.jsx)(ProfileParrot, {})
+				]
+			}),
+			/* @__PURE__ */ (0, import_jsx_runtime.jsx)("path", {
+				d: "M20 90 Q130 98 244 90",
+				fill: "none",
+				stroke: "#6a9e8c",
+				strokeWidth: "1",
+				opacity: "0.35"
+			})
+		]
+	});
+}
+function ProfileParrot() {
+	return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("g", {
+		transform: "translate(28 -10)",
+		style: { animation: "idle-bob 1.8s ease-in-out infinite" },
+		children: [
+			/* @__PURE__ */ (0, import_jsx_runtime.jsx)("path", {
+				d: "M-16 18 C-22 22 -20 32 -12 34 C-8 28 -8 22 -10 18 Z",
+				fill: "#1f6b3a"
+			}),
+			/* @__PURE__ */ (0, import_jsx_runtime.jsx)("ellipse", {
+				cx: "2",
+				cy: "18",
+				rx: "12",
+				ry: "11",
+				fill: "#c43b2e"
+			}),
+			/* @__PURE__ */ (0, import_jsx_runtime.jsx)("ellipse", {
+				cx: "-2",
+				cy: "20",
+				rx: "8",
+				ry: "7",
+				fill: "#2f8a45",
+				transform: "rotate(-20 -2 20)"
+			}),
+			/* @__PURE__ */ (0, import_jsx_runtime.jsx)("ellipse", {
+				cx: "12",
+				cy: "8",
+				rx: "9",
+				ry: "8",
+				fill: "#c43b2e"
+			}),
+			/* @__PURE__ */ (0, import_jsx_runtime.jsx)("path", {
+				d: "M6 4 Q12 -4 20 6 Q16 12 8 10 Z",
+				fill: "#2f8a45"
+			}),
+			/* @__PURE__ */ (0, import_jsx_runtime.jsx)("ellipse", {
+				cx: "16",
+				cy: "9",
+				rx: "4.5",
+				ry: "4",
+				fill: "#f3e6c8"
+			}),
+			/* @__PURE__ */ (0, import_jsx_runtime.jsx)("circle", {
+				cx: "17.5",
+				cy: "8.5",
+				r: "1.6",
+				fill: "#0a0c0b"
+			}),
+			/* @__PURE__ */ (0, import_jsx_runtime.jsx)("path", {
+				d: "M20 9 Q28 8 25 14 Q22 12 20 11 Z",
+				fill: "#e2a12a"
+			}),
+			/* @__PURE__ */ (0, import_jsx_runtime.jsx)("rect", {
+				x: "10",
+				y: "-10",
+				width: "1.6",
+				height: "10",
+				rx: "0.6",
+				fill: "#3a3228"
+			}),
+			/* @__PURE__ */ (0, import_jsx_runtime.jsx)("circle", {
+				cx: "10.8",
+				cy: "-10",
+				r: "2.4",
+				fill: "#6a9e8c"
+			}),
+			/* @__PURE__ */ (0, import_jsx_runtime.jsx)("path", {
+				d: "M0 28 L-2 34 M4 28 L6 34",
+				stroke: "#e2a12a",
+				strokeWidth: "1.2",
+				strokeLinecap: "round"
 			})
 		]
 	});
@@ -3040,9 +3623,9 @@ function OverlayBoxes() {
 		})]
 	});
 }
-var WASM_CDN = "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.21/wasm";
+var WASM_CDN = "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@1.0.1/wasm";
 var POSE_MODEL = "https://storage.googleapis.com/mediapipe-models/pose_landmarker/pose_landmarker_lite/float16/1/pose_landmarker_lite.task";
-var OBJECT_MODEL = "https://storage.googleapis.com/mediapipe-models/object_detector/efficientdet_lite0/float16/1/efficientdet_lite0.task";
+var OBJECT_MODELS = ["https://storage.googleapis.com/mediapipe-models/object_detector/efficientdet_lite0/float16/1/efficientdet_lite0.tflite", "https://storage.googleapis.com/mediapipe-models/object_detector/efficientdet_lite0/float16/latest/efficientdet_lite0.tflite"];
 var VisionPipeline = class {
 	pose = null;
 	objects = null;
@@ -3053,7 +3636,7 @@ var VisionPipeline = class {
 	async init() {
 		const { FilesetResolver, PoseLandmarker, ObjectDetector } = await import("../_libs/mediapipe__tasks-vision.mjs").then((n) => n.t);
 		const fileset = await FilesetResolver.forVisionTasks(WASM_CDN);
-		const tryDelegate = async (delegate) => {
+		const tryPose = async (delegate) => {
 			this.pose = await PoseLandmarker.createFromOptions(fileset, {
 				baseOptions: {
 					modelAssetPath: POSE_MODEL,
@@ -3065,31 +3648,48 @@ var VisionPipeline = class {
 				minPosePresenceConfidence: .4,
 				minTrackingConfidence: .4
 			});
-			this.objects = await ObjectDetector.createFromOptions(fileset, {
-				baseOptions: {
-					modelAssetPath: OBJECT_MODEL,
-					delegate
-				},
-				runningMode: "VIDEO",
-				scoreThreshold: .35,
-				maxResults: 8
-			});
 		};
 		try {
-			await tryDelegate("GPU");
+			await tryPose("GPU");
 		} catch {
-			await tryDelegate("CPU");
+			await tryPose("CPU");
 		}
+		if (!this.pose) throw new Error("Pose model failed to load");
+		for (const url of OBJECT_MODELS) {
+			const tryObjects = async (delegate) => {
+				this.objects = await ObjectDetector.createFromOptions(fileset, {
+					baseOptions: {
+						modelAssetPath: url,
+						delegate
+					},
+					runningMode: "VIDEO",
+					scoreThreshold: .35,
+					maxResults: 8
+				});
+			};
+			try {
+				await tryObjects("GPU");
+				break;
+			} catch {
+				try {
+					await tryObjects("CPU");
+					break;
+				} catch {
+					this.objects = null;
+				}
+			}
+		}
+		if (!this.objects) this.error = "Object detector unavailable — pose-only scene analysis";
 		this.ready = true;
 	}
 	detect(video, ts) {
-		if (!this.pose || !this.objects) return null;
+		if (!this.pose) return null;
 		if (video.currentTime === this.lastVideoTime) return null;
 		this.lastVideoTime = video.currentTime;
 		const w = video.videoWidth || 1;
 		const h = video.videoHeight || 1;
 		const poses = this.pose.detectForVideo(video, ts);
-		const dets = this.objects.detectForVideo(video, ts);
+		const dets = this.objects?.detectForVideo(video, ts);
 		return classifyScene({
 			people: (poses.landmarks ?? []).map((lms, i) => {
 				const xs = lms.map((p) => p.x);
@@ -3135,7 +3735,7 @@ var VisionPipeline = class {
 					likelyChild
 				};
 			}),
-			objects: (dets.detections ?? []).map((d) => {
+			objects: (dets?.detections ?? []).map((d) => {
 				const cat = d.categories[0];
 				const bb = d.boundingBox;
 				if (!cat || !bb) return null;
@@ -3213,6 +3813,7 @@ function WebcamPanel() {
 			try {
 				await pipe.init();
 				setVisionReady(true);
+				if (pipe.error) setCamError(pipe.error);
 			} catch (err) {
 				setVisionReady(false);
 				setCamError(err instanceof Error ? err.message : "Vision models unavailable — live video only");

@@ -26,38 +26,42 @@ export function TowpathScene({ scene }: { scene: SceneContext | null }) {
           <stop offset="0" stopColor="#1a2e2c" />
           <stop offset="1" stopColor="#0d1614" />
         </linearGradient>
+        <linearGradient id="hull" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stopColor="#3d2a18" />
+          <stop offset="1" stopColor="#24180e" />
+        </linearGradient>
+        <linearGradient id="cabin" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stopColor="#6a9e8c" />
+          <stop offset="1" stopColor="#3d6b5c" />
+        </linearGradient>
       </defs>
       <rect width="640" height="360" fill="url(#sky)" />
-      <path d="M0 172 Q256 144 640 180 L640 360 L0 360 Z" fill="#1c2420" />
-      <path d="M0 224 Q320 208 640 238 L640 360 L0 360 Z" fill="url(#water)" />
-      <rect x="0" y="188" width="640" height="42" fill="#2a2620" />
+      <path d="M0 168 Q240 148 640 176 L640 360 L0 360 Z" fill="#1c2420" />
+      <path d="M0 228 Q320 214 640 242 L640 360 L0 360 Z" fill="url(#water)" />
+      <rect x="0" y="186" width="640" height="42" fill="#2a2620" />
       {Array.from({ length: 36 }, (_, i) => (
-        <rect key={i} x={i * 18} y="188" width="10" height="4" fill="#3a342c" />
+        <rect key={i} x={i * 18} y="186" width="10" height="4" fill="#3a342c" />
       ))}
-      <g className="origin-center" style={{ animation: "idle-bob 2.4s ease-in-out infinite" }}>
-        <rect x="68" y="118" width="12" height="78" rx="1" fill="#3a3228" />
-        <rect x="60" y="192" width="28" height="8" fill="#2a241c" />
-        <ellipse cx="74" cy="108" rx="16" ry="18" fill="#c8d4cc" />
-        <ellipse cx="68" cy="106" rx="3" ry="3" fill="#6a9e8c" />
-        <ellipse cx="80" cy="106" rx="3" ry="3" fill="#6a9e8c" />
-        <rect x="73" y="78" width="2" height="18" fill="#3a3228" />
-        <circle cx="74" cy="76" r="4" fill="#6a9e8c" />
+
+      <g className="origin-center" style={{ animation: "idle-bob 3.2s ease-in-out infinite" }}>
+        <Narrowboat />
       </g>
+
       {empty && (
         <g className="origin-center" style={{ animation: "idle-bob 3.6s ease-in-out infinite" }}>
-          <ellipse cx="400" cy="268" rx="10" ry="6" fill="#c8d4cc" />
-          <circle cx="410" cy="262" r="4" fill="#c8d4cc" />
-          <polygon points="414,262 424,264 414,266" fill="#c45c4a" />
+          <ellipse cx="520" cy="278" rx="10" ry="6" fill="#c8d4cc" />
+          <circle cx="530" cy="272" r="4" fill="#c8d4cc" />
+          <polygon points="534,272 544,274 534,276" fill="#c45c4a" />
         </g>
       )}
       {!empty &&
         Array.from({ length: people }, (_, i) => {
-          const x = 250 + i * 90;
+          const x = 280 + i * 86;
           const scale = scene?.closeUp ? 1.7 : scene?.hasChild && i === people - 1 ? 0.62 : 1;
-          return <Walker key={i} x={x} y={180} scale={scale} jogging={jogging} />;
+          return <Walker key={i} x={x} y={178} scale={scale} jogging={jogging} />;
         })}
       {scene?.hasDog && (
-        <g transform="translate(460 210)">
+        <g transform="translate(500 208)">
           <rect x="-14" y="0" width="26" height="10" fill="#2a2218" />
           <rect x="10" y="-6" width="10" height="8" fill="#2a2218" />
           <rect x="-14" y="10" width="4" height="8" fill="#2a2218" />
@@ -66,7 +70,7 @@ export function TowpathScene({ scene }: { scene: SceneContext | null }) {
         </g>
       )}
       {scene?.hasBicycle && (
-        <g transform="translate(360 200)" fill="none" stroke="#111" strokeWidth="2">
+        <g transform="translate(400 198)" fill="none" stroke="#111" strokeWidth="2">
           <circle cx="-16" cy="18" r="10" />
           <circle cx="16" cy="18" r="10" />
           <path d="M-16 18 L0 6 L16 18 L4 0" />
@@ -76,12 +80,71 @@ export function TowpathScene({ scene }: { scene: SceneContext | null }) {
   );
 }
 
+function Narrowboat() {
+  return (
+    <g transform="translate(36 150)">
+      {/* hull */}
+      <path d="M8 78 L18 58 L236 58 L252 78 L248 92 L12 92 Z" fill="url(#hull)" />
+      <rect x="18" y="70" width="218" height="8" fill="#c45c4a" />
+      <path d="M18 58 L28 48 L210 48 L236 58 Z" fill="#2a241c" />
+      {/* cabin */}
+      <rect x="70" y="22" width="118" height="36" rx="2" fill="url(#cabin)" />
+      <rect x="76" y="28" width="18" height="12" fill="#1a2422" />
+      <rect x="102" y="28" width="18" height="12" fill="#1a2422" />
+      <rect x="128" y="28" width="18" height="12" fill="#1a2422" />
+      <rect x="154" y="28" width="18" height="12" fill="#1a2422" />
+      <rect x="188" y="18" width="8" height="18" fill="#3a3228" />
+      <rect x="186" y="12" width="12" height="6" fill="#2a241c" />
+      {/* tiller deck */}
+      <rect x="20" y="50" width="48" height="10" fill="#3a3228" />
+      <path d="M28 50 L22 38 L26 38 L34 50" fill="#1a1612" />
+      {/* mooring line */}
+      <path d="M248 82 Q280 90 300 78" fill="none" stroke="#3a3228" strokeWidth="1.4" />
+      {/* treasure chest on cabin roof */}
+      <g transform="translate(112 4)">
+        <rect x="0" y="10" width="44" height="20" rx="2" fill="#6b4424" />
+        <rect x="0" y="6" width="44" height="10" rx="2" fill="#8a5a2b" />
+        <rect x="20" y="12" width="6" height="10" rx="1" fill="#c4a15a" />
+        <rect x="2" y="16" width="40" height="3" fill="#c4a15a" />
+        <rect x="-1" y="8" width="46" height="3" fill="#c4a15a" />
+        <ProfileParrot />
+      </g>
+      {/* waterline glint */}
+      <path d="M20 90 Q130 98 244 90" fill="none" stroke="#6a9e8c" strokeWidth="1" opacity="0.35" />
+    </g>
+  );
+}
+
+function ProfileParrot() {
+  return (
+    <g transform="translate(28 -10)" style={{ animation: "idle-bob 1.8s ease-in-out infinite" }}>
+      <path d="M-16 18 C-22 22 -20 32 -12 34 C-8 28 -8 22 -10 18 Z" fill="#1f6b3a" />
+      <ellipse cx="2" cy="18" rx="12" ry="11" fill="#c43b2e" />
+      <ellipse cx="-2" cy="20" rx="8" ry="7" fill="#2f8a45" transform="rotate(-20 -2 20)" />
+      <ellipse cx="12" cy="8" rx="9" ry="8" fill="#c43b2e" />
+      <path d="M6 4 Q12 -4 20 6 Q16 12 8 10 Z" fill="#2f8a45" />
+      <ellipse cx="16" cy="9" rx="4.5" ry="4" fill="#f3e6c8" />
+      <circle cx="17.5" cy="8.5" r="1.6" fill="#0a0c0b" />
+      <path d="M20 9 Q28 8 25 14 Q22 12 20 11 Z" fill="#e2a12a" />
+      <rect x="10" y="-10" width="1.6" height="10" rx="0.6" fill="#3a3228" />
+      <circle cx="10.8" cy="-10" r="2.4" fill="#6a9e8c" />
+      <path d="M0 28 L-2 34 M4 28 L6 34" stroke="#e2a12a" strokeWidth="1.2" strokeLinecap="round" />
+    </g>
+  );
+}
+
 function Walker({ x, y, scale, jogging }: { x: number; y: number; scale: number; jogging: boolean }) {
   return (
     <g transform={`translate(${x} ${y}) scale(${scale})`} fill="#1a1c1a" stroke="#1a1c1a" strokeWidth="3">
       <circle cy="-28" r="8" stroke="none" />
       <rect x="-7" y="-20" width="14" height="28" stroke="none" />
-      <path d={jogging ? "M-6 -14 L-16 4 M6 -14 L16 0 M-4 8 L-10 28 M4 8 L10 28" : "M-6 -14 L-12 6 M6 -14 L12 4 M-4 8 L-6 28 M4 8 L6 28"} />
+      <path
+        d={
+          jogging
+            ? "M-6 -14 L-16 4 M6 -14 L16 0 M-4 8 L-10 28 M4 8 L10 28"
+            : "M-6 -14 L-12 6 M6 -14 L12 4 M-4 8 L-6 28 M4 8 L6 28"
+        }
+      />
     </g>
   );
 }

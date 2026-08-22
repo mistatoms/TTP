@@ -64,6 +64,7 @@ export function WebcamPanel() {
       try {
         await pipe.init();
         setVisionReady(true);
+        if (pipe.error) setCamError(pipe.error);
       } catch (err) {
         setVisionReady(false);
         setCamError(err instanceof Error ? err.message : "Vision models unavailable — live video only");
