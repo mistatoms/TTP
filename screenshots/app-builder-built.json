@@ -1,0 +1,40 @@
+{
+  "url": "http://127.0.0.1:8081/",
+  "viewports": {
+    "desktop": {
+      "width": 1280,
+      "height": 800,
+      "status": 200,
+      "title": "TTPFTTP",
+      "hasCanvas": false,
+      "bodyTextLen": 1302,
+      "bodyTextHash": "f4b3120ee380ab19451c2c142169f5015f573051d2b083ed45d10047931d75d3",
+      "bodyTextPrefix": "TTPFTTP Trash Talking Parrot for the Tow Path Mild Medium Voice ",
+      "horizontalOverflow": false,
+      "consoleErrors": [],
+      "pageErrors": [],
+      "screenshot": "/workspace/screenshots/app-builder-built.png"
+    },
+    "mobile": {
+      "width": 390,
+      "height": 844,
+      "status": 200,
+      "title": "TTPFTTP",
+      "hasCanvas": false,
+      "bodyTextLen": 869,
+      "bodyTextHash": "e2d617c1d2619096c1a622000aa3cd4f0dabf6d0259cc9cb818b7e1b84048e96",
+      "bodyTextPrefix": "TTPFTTP Trash Talking Parrot for the Tow Path Mild Medium Voice ",
+      "horizontalOverflow": false,
+      "consoleErrors": [],
+      "pageErrors": [],
+      "screenshot": "/workspace/screenshots/app-builder-built-mobile.png"
+    }
+  },
+  "brandWarnings": [],
+  "authWarnings": [],
+  "verdictFile": "/workspace/screenshots/app-builder-built.json",
+  "divergesFromBaseline": true,
+  "baselineReasons": [
+    "mobile: body text changed (1362 -> 869 chars, hash mismatch)"
+  ]
+}

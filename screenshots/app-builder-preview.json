@@ -1,0 +1,36 @@
+{
+  "url": "http://127.0.0.1:8080/",
+  "viewports": {
+    "desktop": {
+      "width": 1280,
+      "height": 800,
+      "status": 200,
+      "title": "TTPFTTP",
+      "hasCanvas": false,
+      "bodyTextLen": 1346,
+      "bodyTextHash": "4418240ad69d5a2378091887e3a7eb4a0eb08224fe2081acf8cc8d8f0c400717",
+      "bodyTextPrefix": "TTPFTTP Trash Talking Parrot for the Tow Path Mild Medium Voice ",
+      "horizontalOverflow": false,
+      "consoleErrors": [],
+      "pageErrors": [],
+      "screenshot": "/workspace/screenshots/app-builder-preview.png"
+    },
+    "mobile": {
+      "width": 390,
+      "height": 844,
+      "status": 200,
+      "title": "TTPFTTP",
+      "hasCanvas": false,
+      "bodyTextLen": 1362,
+      "bodyTextHash": "1bb75393235bb968e5fff01e640e074cb52088735bcde6f6a13b4d5102d8131f",
+      "bodyTextPrefix": "TTPFTTP Trash Talking Parrot for the Tow Path Mild Medium Voice ",
+      "horizontalOverflow": false,
+      "consoleErrors": [],
+      "pageErrors": [],
+      "screenshot": "/workspace/screenshots/app-builder-preview-mobile.png"
+    }
+  },
+  "brandWarnings": [],
+  "authWarnings": [],
+  "verdictFile": "/workspace/screenshots/app-builder-preview.json"
+}
