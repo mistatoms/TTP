@@ -3,17 +3,11 @@ import type { SceneContext } from "@/lib/vision/types";
 
 export function TowpathScene({ scene }: { scene: SceneContext | null }) {
   const part = scene?.dayPart ?? "evening";
+  const wx = scene?.weather?.kind;
   const empty = !scene || scene.id === "empty";
   const people = empty ? 0 : Math.max(1, scene.peopleCount);
-  const jogging = scene?.activity === "running" || scene?.activity === "brisk";
-  const sky =
-    part === "night"
-      ? ["#0c1014", "#1a2220"]
-      : part === "morning"
-        ? ["#c9b8a0", "#7a8a82"]
-        : part === "afternoon"
-          ? ["#8aa0a8", "#5b7068"]
-          : ["#3a3c48", "#2a322e"];
+  const jogging = scene?.id === "cyclist_jogger" || scene?.activity === "running" || scene?.activity === "brisk";
+  const sky = skyFor(part, wx);
 
   return (
     <svg viewBox="0 0 640 360" className="h-full w-full" aria-hidden>
@@ -36,6 +30,19 @@ export function TowpathScene({ scene }: { scene: SceneContext | null }) {
         </linearGradient>
       </defs>
       <rect width="640" height="360" fill="url(#sky)" />
+      {(wx === "rain" || wx === "drizzle" || wx === "storm") &&
+        Array.from({ length: 28 }, (_, i) => (
+          <line
+            key={i}
+            x1={12 + i * 22}
+            y1="8"
+            x2={4 + i * 22}
+            y2="70"
+            stroke="#c8d4cc"
+            strokeOpacity={wx === "drizzle" ? 0.18 : 0.32}
+            strokeWidth="1"
+          />
+        ))}
       <path d="M0 168 Q240 148 640 176 L640 360 L0 360 Z" fill="#1c2420" />
       <path d="M0 228 Q320 214 640 242 L640 360 L0 360 Z" fill="url(#water)" />
       <rect x="0" y="186" width="640" height="42" fill="#2a2620" />
@@ -57,16 +64,15 @@ export function TowpathScene({ scene }: { scene: SceneContext | null }) {
       {!empty &&
         Array.from({ length: people }, (_, i) => {
           const x = 280 + i * 86;
-          const scale = scene?.closeUp ? 1.7 : scene?.hasChild && i === people - 1 ? 0.62 : 1;
+          const scale = scene?.hasChild && i === people - 1 ? 0.62 : 1;
           return <Walker key={i} x={x} y={178} scale={scale} jogging={jogging} />;
         })}
-      {scene?.hasDog && (
-        <g transform="translate(500 208)">
-          <rect x="-14" y="0" width="26" height="10" fill="#2a2218" />
-          <rect x="10" y="-6" width="10" height="8" fill="#2a2218" />
-          <rect x="-14" y="10" width="4" height="8" fill="#2a2218" />
-          <rect x="6" y="10" width="4" height="8" fill="#2a2218" />
-          <rect x="-16" y="2" width="8" height="3" fill="#2a2218" />
+      {scene?.hasPram && (
+        <g transform="translate(318 198)">
+          <rect x="0" y="4" width="28" height="16" rx="3" fill="#2a241c" />
+          <circle cx="6" cy="24" r="5" fill="#1a1612" />
+          <circle cx="22" cy="24" r="5" fill="#1a1612" />
+          <rect x="24" y="-6" width="3" height="18" fill="#3a3228" />
         </g>
       )}
       {scene?.hasBicycle && (
@@ -80,14 +86,23 @@ export function TowpathScene({ scene }: { scene: SceneContext | null }) {
   );
 }
 
+function skyFor(part: string, wx?: string | null): [string, string] {
+  if (wx === "storm") return ["#1a1c22", "#2a2220"];
+  if (wx === "rain" || wx === "drizzle") return ["#4a5560", "#2a322e"];
+  if (wx === "fog") return ["#7a8078", "#4a524c"];
+  if (wx === "snow") return ["#c8d0d4", "#8a9690"];
+  if (part === "night") return ["#0c1014", "#1a2220"];
+  if (part === "morning") return ["#c9b8a0", "#7a8a82"];
+  if (part === "afternoon") return ["#8aa0a8", "#5b7068"];
+  return ["#3a3c48", "#2a322e"];
+}
+
 function Narrowboat() {
   return (
     <g transform="translate(36 150)">
-      {/* hull */}
       <path d="M8 78 L18 58 L236 58 L252 78 L248 92 L12 92 Z" fill="url(#hull)" />
       <rect x="18" y="70" width="218" height="8" fill="#c45c4a" />
       <path d="M18 58 L28 48 L210 48 L236 58 Z" fill="#2a241c" />
-      {/* cabin */}
       <rect x="70" y="22" width="118" height="36" rx="2" fill="url(#cabin)" />
       <rect x="76" y="28" width="18" height="12" fill="#1a2422" />
       <rect x="102" y="28" width="18" height="12" fill="#1a2422" />
@@ -95,21 +110,19 @@ function Narrowboat() {
       <rect x="154" y="28" width="18" height="12" fill="#1a2422" />
       <rect x="188" y="18" width="8" height="18" fill="#3a3228" />
       <rect x="186" y="12" width="12" height="6" fill="#2a241c" />
-      {/* tiller deck */}
       <rect x="20" y="50" width="48" height="10" fill="#3a3228" />
       <path d="M28 50 L22 38 L26 38 L34 50" fill="#1a1612" />
-      {/* mooring line */}
       <path d="M248 82 Q280 90 300 78" fill="none" stroke="#3a3228" strokeWidth="1.4" />
-      {/* treasure chest on cabin roof */}
       <g transform="translate(112 4)">
         <rect x="0" y="10" width="44" height="20" rx="2" fill="#6b4424" />
         <rect x="0" y="6" width="44" height="10" rx="2" fill="#8a5a2b" />
         <rect x="20" y="12" width="6" height="10" rx="1" fill="#c4a15a" />
         <rect x="2" y="16" width="40" height="3" fill="#c4a15a" />
         <rect x="-1" y="8" width="46" height="3" fill="#c4a15a" />
+      </g>
+      <g transform="translate(134 -28)">
         <ProfileParrot />
       </g>
-      {/* waterline glint */}
       <path d="M20 90 Q130 98 244 90" fill="none" stroke="#6a9e8c" strokeWidth="1" opacity="0.35" />
     </g>
   );
@@ -117,7 +130,7 @@ function Narrowboat() {
 
 function ProfileParrot() {
   return (
-    <g transform="translate(28 -10)" style={{ animation: "idle-bob 1.8s ease-in-out infinite" }}>
+    <g style={{ animation: "idle-bob 1.8s ease-in-out infinite" }}>
       <path d="M-16 18 C-22 22 -20 32 -12 34 C-8 28 -8 22 -10 18 Z" fill="#1f6b3a" />
       <ellipse cx="2" cy="18" rx="12" ry="11" fill="#c43b2e" />
       <ellipse cx="-2" cy="20" rx="8" ry="7" fill="#2f8a45" transform="rotate(-20 -2 20)" />

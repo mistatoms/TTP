@@ -2,26 +2,29 @@ import {
   clockLabel,
   dayPartFromDate,
   weekdayName,
-  type ApparentPresentation,
   type DetectedObject,
   type DetectedPerson,
   type SceneContext,
   type SceneId,
   SCENE_LABELS,
+  type WeatherSnapshot,
 } from "./types";
+import { associate, isPramLike, relativeSizeChildren } from "./supervision";
 
 export interface ClassifyInput {
   people: DetectedPerson[];
   objects: DetectedObject[];
-  presentation?: ApparentPresentation;
+  weather?: WeatherSnapshot | null;
 }
 
 export function classifyScene(input: ClassifyInput, now = new Date()): SceneContext {
-  const people = input.people;
+  const people = relativeSizeChildren(input.people);
   const objects = input.objects;
   const hasDog = objects.some((o) => o.label === "dog" || o.label === "cat");
-  const bikeCount = objects.filter((o) => o.label === "bicycle" || o.label === "motorcycle").length;
-  const hasBicycle = bikeCount > 0;
+  const bikes = objects.filter((o) => o.label === "bicycle" || o.label === "motorcycle");
+  const hasBicycle = bikes.length > 0;
+  const prams = objects.filter(isPramLike);
+  const hasPramObj = prams.length > 0;
   const closeUp = people.some((p) => p.closeness >= 0.42);
   const hasChild = people.some((p) => p.likelyChild);
   const adults = people.filter((p) => !p.likelyChild);
@@ -33,66 +36,61 @@ export function classifyScene(input: ClassifyInput, now = new Date()): SceneCont
   else if (meanMotion > 0.14) activity = "brisk";
   else if (meanMotion > 0.04) activity = "strolling";
 
-  const presentation = input.presentation ?? "unspecified";
+  const bikeAssoc = associate(people, objects, ["bicycle", "motorcycle"]);
+  const pramAssoc = associate(people, prams, prams.map((p) => p.label));
   const notes: string[] = [];
 
   let id: SceneId = "empty";
   let confidence = 0.55;
 
-  if (people.length === 0 && !hasDog && !hasBicycle) {
+  if (people.length === 0 && !hasBicycle) {
     id = "empty";
     confidence = 0.9;
-    notes.push("No person, dog or bicycle in frame.");
-  } else if (closeUp && people.length >= 1) {
-    id = "close_sitter";
-    confidence = Math.min(0.95, 0.55 + people[0]!.closeness);
-    notes.push("Large subject filling the frame — treating as a desk / close sit.");
-  } else if (hasBicycle) {
-    id = bikeCount > 1 || people.length > 1 ? "multiple_cyclists" : "cyclist";
+    notes.push("No person or bicycle in frame.");
+  } else if (pramAssoc.size > 0 || (hasPramObj && adults.length >= 1)) {
+    id = "walker_pram";
     confidence = 0.78;
-    notes.push(`Bicycle-class object ×${bikeCount}.`);
-  } else if (activity === "running") {
-    id = people.length > 1 ? "multiple_joggers" : "single_jogger";
-    confidence = 0.74;
-    notes.push("High landmark motion — jogging / running gait.");
-  } else if (hasDog) {
-    id = "adult_dog";
-    confidence = 0.8;
-    notes.push("Companion animal detected alongside a person.");
+    notes.push("Person associated with a pram-like object (relative size + IoU).");
   } else if (hasChild && adults.length >= 1) {
-    id = "adult_child";
-    confidence = 0.72;
-    notes.push("One smaller figure beside a larger adult-scale pose.");
-  } else if (people.length >= 2) {
-    id = "multiple_adults";
+    id = "walker_child";
     confidence = 0.76;
-    notes.push(`${people.length} people, walking pace.`);
+    notes.push("Child from relative-height model beside an adult-scale figure.");
+  } else if (bikeAssoc.size > 0 || hasBicycle || activity === "running") {
+    id = "cyclist_jogger";
+    confidence = hasBicycle ? 0.8 : 0.72;
+    notes.push(hasBicycle ? "Person associated with a bicycle." : "High motion — jogging gait.");
+  } else if (people.length >= 2) {
+    id = "walker_multiple";
+    confidence = 0.76;
+    notes.push(`${people.length} walkers, walking pace.`);
   } else if (people.length === 1) {
-    if (presentation === "masculine") id = "single_adult_male";
-    else if (presentation === "feminine") id = "single_adult_female";
-    else id = "single_adult";
-    confidence = 0.7;
-    notes.push("Single pedestrian, modest motion.");
+    id = "walker_single";
+    confidence = 0.74;
+    notes.push("Single walker.");
   } else {
     id = "unknown";
     confidence = 0.4;
   }
+
+  if (hasDog) notes.push("Dog in frame — noted, not a scene class.");
+  if (input.weather) notes.push(`Weather ${input.weather.label}.`);
 
   return {
     id,
     label: SCENE_LABELS[id],
     confidence,
     peopleCount: people.length,
-    groupSize: Math.max(people.length, hasDog ? people.length + 1 : people.length),
+    groupSize: people.length,
     activity,
     hasDog,
     hasBicycle,
+    hasPram: id === "walker_pram",
     hasChild,
     closeUp,
-    presentation,
     dayPart: dayPartFromDate(now),
     weekday: weekdayName(now),
     clock: clockLabel(now),
+    weather: input.weather ?? null,
     notes,
     people,
     objects,
@@ -110,7 +108,7 @@ export function makeDemoDetections(id: SceneId): ClassifyInput {
   });
   const child: DetectedPerson = {
     id: 2,
-    bbox: [0.48, 0.42, 0.12, 0.32],
+    bbox: [0.48, 0.48, 0.1, 0.28],
     closeness: 0.12,
     motion: 0.06,
     likelyChild: true,
@@ -119,40 +117,22 @@ export function makeDemoDetections(id: SceneId): ClassifyInput {
   switch (id) {
     case "empty":
       return { people: [], objects: [] };
-    case "single_adult":
+    case "walker_single":
       return { people: [adult(0, 0.07)], objects: [] };
-    case "single_adult_male":
-      return { people: [adult(0, 0.07)], objects: [], presentation: "masculine" };
-    case "single_adult_female":
-      return { people: [adult(0, 0.06)], objects: [], presentation: "feminine" };
-    case "multiple_adults":
+    case "walker_multiple":
       return { people: [adult(0, 0.08), adult(1, 0.07)], objects: [] };
-    case "adult_child":
+    case "walker_child":
       return { people: [adult(0, 0.05), child], objects: [] };
-    case "adult_dog":
+    case "walker_pram":
       return {
-        people: [adult(0, 0.06)],
-        objects: [{ label: "dog", score: 0.88, bbox: [0.55, 0.62, 0.16, 0.18] }],
+        people: [adult(0, 0.05)],
+        objects: [{ label: "suitcase", score: 0.82, bbox: [0.34, 0.58, 0.16, 0.18] }],
       };
-    case "single_jogger":
-      return { people: [adult(0, 0.36)], objects: [] };
-    case "multiple_joggers":
-      return { people: [adult(0, 0.4), adult(1, 0.38)], objects: [] };
-    case "cyclist":
+    case "cyclist_jogger":
       return {
-        people: [adult(0, 0.22)],
-        objects: [{ label: "bicycle", score: 0.9, bbox: [0.28, 0.5, 0.3, 0.28] }],
+        people: [adult(0, 0.32)],
+        objects: [{ label: "bicycle", score: 0.9, bbox: [0.22, 0.5, 0.28, 0.26] }],
       };
-    case "multiple_cyclists":
-      return {
-        people: [adult(0, 0.2), adult(1, 0.21)],
-        objects: [
-          { label: "bicycle", score: 0.86, bbox: [0.22, 0.5, 0.24, 0.26] },
-          { label: "bicycle", score: 0.81, bbox: [0.5, 0.52, 0.24, 0.24] },
-        ],
-      };
-    case "close_sitter":
-      return { people: [adult(0, 0.02, 0.62)], objects: [] };
     default:
       return { people: [adult(0, 0.05)], objects: [] };
   }

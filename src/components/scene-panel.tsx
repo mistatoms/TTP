@@ -5,7 +5,9 @@ import { useParrotStore } from "@/lib/parrot/store";
 export function ScenePanel() {
   const scene = useParrotStore((s) => s.scene);
   const opening = useParrotStore((s) => s.pendingOpening);
+  const weather = useParrotStore((s) => s.weather);
   const forceNewOpening = useParrotStore((s) => s.forceNewOpening);
+  const wx = scene?.weather ?? weather;
 
   if (!scene) {
     return (
@@ -24,7 +26,10 @@ export function ScenePanel() {
     <Card>
       <CardHeader>
         <CardTitle>Scene</CardTitle>
-        <Badge variant="canal">{scene.dayPart}</Badge>
+        <div className="flex flex-wrap items-center gap-1.5">
+          <Badge variant="canal">{scene.dayPart}</Badge>
+          <Badge variant={wx ? "live" : "outline"}>{wx ? wx.label : "Weather…"}</Badge>
+        </div>
       </CardHeader>
       <p className="font-display text-xl leading-snug tracking-tight text-fg">{scene.label}</p>
       <div className="mt-3 h-1.5 overflow-hidden rounded-full bg-surface-2">
@@ -33,15 +38,17 @@ export function ScenePanel() {
       <p className="mt-1 text-xs tabular-nums text-muted">{pct}% confidence</p>
       <dl className="mt-4 grid grid-cols-2 gap-x-3 gap-y-2 text-xs">
         <Row k="When" v={`${scene.weekday} · ${scene.clock}`} />
+        <Row
+          k="Weather"
+          v={wx ? `${wx.label}${wx.tempC != null ? ` ${Math.round(wx.tempC)}°` : ""}` : "—"}
+        />
         <Row k="Group" v={`${scene.groupSize}`} />
         <Row k="Activity" v={scene.activity} />
-        <Row k="Dog" v={scene.hasDog ? "yes" : "no"} />
+        <Row k="Child" v={scene.hasChild ? "yes" : "no"} />
+        <Row k="Pram" v={scene.hasPram ? "yes" : "no"} />
         <Row k="Bicycle" v={scene.hasBicycle ? "yes" : "no"} />
-        <Row k="Close-up" v={scene.closeUp ? "desk" : "path"} />
       </dl>
-      {scene.notes.length > 0 && (
-        <p className="mt-3 text-xs text-subtle">{scene.notes.join(" ")}</p>
-      )}
+      {scene.notes.length > 0 && <p className="mt-3 text-xs text-subtle">{scene.notes.join(" ")}</p>}
       {opening && (
         <blockquote className="mt-4 rounded-md bg-surface-2 px-3 py-2 text-sm leading-relaxed text-fg">
           “{opening}”

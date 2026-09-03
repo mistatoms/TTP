@@ -5,16 +5,18 @@ import { pickOpening, sceneSummary } from "@/lib/parrot/openings";
 import { enactSentiment } from "@/lib/parrot/sentiment";
 import { furby } from "@/lib/furby/controller";
 import { PRESET_ANTENNA, type AntennaColor, type SensorReading } from "@/lib/furby/protocol";
-import type { SceneContext, SceneId } from "@/lib/vision/types";
+import { migrateSceneId, type SceneContext, type SceneId, type WeatherSnapshot } from "@/lib/vision/types";
 import type {
   CameraMode,
   ChatMessage,
   FurbyMode,
+  ParrotMood,
   ReasoningEvent,
   RoastIntensity,
   SessionLog,
   VoiceStatus,
 } from "./types";
+import { MOOD_ANTENNA } from "./types";
 import { DEFAULT_VOICE, type ParrotVoiceId } from "./persona";
 
 const uid = () => Math.random().toString(36).slice(2, 10);
@@ -23,10 +25,17 @@ function asFurbyMode(v: unknown): FurbyMode {
   return v === "bluetooth" || v === "pyfluff" ? "bluetooth" : "simulator";
 }
 
+function asRoast(v: unknown): RoastIntensity {
+  if (v === "unhinged" || v === "mad") return "mad";
+  if (v === "medium" || v === "mild") return v;
+  return "mild";
+}
+
 interface ParrotState {
   roastIntensity: RoastIntensity;
   autoEngage: boolean;
   voiceId: ParrotVoiceId;
+  customVoices: string[];
   furbyMode: FurbyMode;
   furbyConnected: boolean;
   furbyName: string;
@@ -34,10 +43,12 @@ interface ParrotState {
   lastAction: string | null;
   antenna: AntennaColor;
   sensors: SensorReading | null;
+  mood: ParrotMood;
   cameraMode: CameraMode;
   demoScene: SceneId;
   overlays: boolean;
   scene: SceneContext | null;
+  weather: WeatherSnapshot | null;
   pendingOpening: string | null;
   messages: ChatMessage[];
   reasoning: ReasoningEvent[];
@@ -53,10 +64,13 @@ interface ParrotState {
   setRoast: (v: RoastIntensity) => void;
   setAutoEngage: (v: boolean) => void;
   setVoiceId: (v: ParrotVoiceId) => void;
+  addCustomVoice: (id: string) => void;
   setFurbyMode: (v: FurbyMode) => void;
   setCameraMode: (v: CameraMode) => void;
   setOverlays: (v: boolean) => void;
   setDemoScene: (id: SceneId) => void;
+  setWeather: (w: WeatherSnapshot | null) => void;
+  setMood: (m: ParrotMood) => void;
   applyScene: (scene: SceneContext, source: "live" | "demo") => void;
   pushMessage: (role: ChatMessage["role"], text: string) => void;
   pushReason: (kind: ReasoningEvent["kind"], title: string, detail: string) => void;
@@ -79,6 +93,7 @@ export const useParrotStore = create<ParrotState>()(
       roastIntensity: "mild",
       autoEngage: false,
       voiceId: DEFAULT_VOICE,
+      customVoices: [],
       furbyMode: "simulator",
       furbyConnected: true,
       furbyName: "Simulator",
@@ -86,10 +101,12 @@ export const useParrotStore = create<ParrotState>()(
       lastAction: null,
       antenna: { ...PRESET_ANTENNA.moss },
       sensors: null,
+      mood: "neutral",
       cameraMode: "demo",
-      demoScene: "adult_dog",
+      demoScene: "walker_single",
       overlays: true,
       scene: null,
+      weather: null,
       pendingOpening: null,
       messages: [],
       reasoning: [],
@@ -102,9 +119,15 @@ export const useParrotStore = create<ParrotState>()(
       parrotLevel: 0,
       aiAvailable: null,
 
-      setRoast: (v) => set({ roastIntensity: v }),
+      setRoast: (v) => set({ roastIntensity: asRoast(v) }),
       setAutoEngage: (v) => set({ autoEngage: v }),
-      setVoiceId: (v) => set({ voiceId: v }),
+      setVoiceId: (v) => set({ voiceId: v.trim() || DEFAULT_VOICE }),
+      addCustomVoice: (id) => {
+        const clean = id.trim();
+        if (!clean) return;
+        const customVoices = Array.from(new Set([...get().customVoices, clean]));
+        set({ customVoices, voiceId: clean });
+      },
       setFurbyMode: (v) => {
         const mode = asFurbyMode(v);
         furby.setMode(mode);
@@ -118,29 +141,39 @@ export const useParrotStore = create<ParrotState>()(
       setCameraMode: (v) => set({ cameraMode: v }),
       setOverlays: (v) => set({ overlays: v }),
       setDemoScene: (id) => {
-        const scene = classifyScene(makeDemoDetections(id));
+        const scene = classifyScene({ ...makeDemoDetections(id), weather: get().weather });
         get().applyScene(scene, "demo");
-        set({ demoScene: id, cameraMode: "demo" });
+        set({ demoScene: migrateSceneId(id), cameraMode: "demo" });
+      },
+      setWeather: (w) => {
+        set({ weather: w });
+        const scene = get().scene;
+        if (scene) set({ scene: { ...scene, weather: w } });
+      },
+      setMood: (m) => {
+        set({ mood: m });
+        void furby.setAntennaPreset(MOOD_ANTENNA[m]).catch(() => undefined);
       },
       applyScene: (scene, source) => {
         const prev = get().scene;
-        const changed = !prev || prev.id !== scene.id;
-        set({ scene });
+        const withWx: SceneContext = { ...scene, weather: scene.weather ?? get().weather };
+        const changed = !prev || prev.id !== withWx.id;
+        set({ scene: withWx });
         if (changed) {
-          const opening = pickOpening(scene, get().roastIntensity);
+          const opening = pickOpening(withWx, get().roastIntensity);
           get().pushReason(
             "scene",
-            scene.label,
-            `${source === "demo" ? "Demo" : "Live"} · ${sceneSummary(scene)}`,
+            withWx.label,
+            `${source === "demo" ? "Demo" : "Live"} · ${sceneSummary(withWx)}`,
           );
-          if (scene.id === "empty") {
-            set({ pendingOpening: opening });
-            get().pushReason("idle", "Empty path", "Quiet muttering / idle perch.");
-            void furby.setAntennaPreset("sleepy");
+          set({ pendingOpening: opening });
+          if (withWx.id === "empty") {
+            get().pushReason("idle", "Empty path", "Muttering / singing to the chest.");
+            get().setMood("sleepy");
             return;
           }
-          set({ pendingOpening: opening });
           get().pushReason("opening", "Opening line", opening);
+          get().setMood("cheeky");
         }
       },
       pushMessage: (role, text) => {
@@ -150,6 +183,7 @@ export const useParrotStore = create<ParrotState>()(
         if (role === "user" || role === "parrot") {
           const hit = enactSentiment(text);
           if (hit) {
+            get().setMood(hit.sentiment);
             get().pushReason("tool", "Sentiment", `${hit.sentiment} → ${hit.action}`);
           }
         }
@@ -198,7 +232,7 @@ export const useParrotStore = create<ParrotState>()(
         });
       },
       forceNewOpening: () => {
-        const scene = get().scene ?? classifyScene(makeDemoDetections(get().demoScene));
+        const scene = get().scene ?? classifyScene({ ...makeDemoDetections(get().demoScene), weather: get().weather });
         const opening = pickOpening(scene, get().roastIntensity, Date.now());
         set({ pendingOpening: opening, scene });
         get().pushReason("opening", "Forced new line", opening);
@@ -212,21 +246,22 @@ export const useParrotStore = create<ParrotState>()(
         roastIntensity: s.roastIntensity,
         autoEngage: s.autoEngage,
         voiceId: s.voiceId,
+        customVoices: s.customVoices,
         furbyMode: s.furbyMode,
         overlays: s.overlays,
         logs: s.logs,
         demoScene: s.demoScene,
       }),
       merge: (persisted, current) => {
-        const p = (persisted ?? {}) as Partial<ParrotState> & { furbyMode?: unknown };
+        const p = (persisted ?? {}) as Partial<ParrotState> & { furbyMode?: unknown; demoScene?: unknown };
         return {
           ...current,
           ...p,
           furbyMode: asFurbyMode(p.furbyMode ?? current.furbyMode),
-          roastIntensity:
-            p.roastIntensity === "unhinged" || p.roastIntensity === "medium" || p.roastIntensity === "mild"
-              ? p.roastIntensity
-              : current.roastIntensity,
+          roastIntensity: asRoast(p.roastIntensity ?? current.roastIntensity),
+          demoScene: migrateSceneId(p.demoScene ?? current.demoScene),
+          customVoices: Array.isArray(p.customVoices) ? p.customVoices : current.customVoices,
+          voiceId: typeof p.voiceId === "string" && p.voiceId.trim() ? p.voiceId : current.voiceId,
         };
       },
     },

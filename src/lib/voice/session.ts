@@ -20,9 +20,15 @@ export class VoiceSession {
   private turns = 0;
   private outputBuf = "";
   private responseHadAudio = false;
+  private busy = false;
+  private queued: string | null = null;
 
   get active() {
     return !!this.ws && this.ws.readyState === WebSocket.OPEN;
+  }
+
+  get isBusy() {
+    return this.busy || useParrotStore.getState().voiceStatus === "speaking";
   }
 
   async start(opts: {
@@ -63,7 +69,12 @@ export class VoiceSession {
               opening: opts.opening ?? undefined,
             }),
             tools: FURBY_TOOLS,
-            turn_detection: { type: "server_vad", silence_duration_ms: 700 },
+            turn_detection: {
+              type: "server_vad",
+              silence_duration_ms: 900,
+              create_response: true,
+              interrupt_response: false,
+            },
             audio: {
               input: { format: { type: "audio/pcm", rate: 24000 } },
               output: { format: { type: "audio/pcm", rate: 24000 } },
@@ -73,7 +84,7 @@ export class VoiceSession {
       );
       store.setVoiceStatus("listening");
       store.pushReason("voice", "Live", "Parrot is listening.");
-      if (opts.opening) {
+      if (opts.opening && opts.scene?.id !== "empty") {
         this.speakOpening(opts.opening);
       } else {
         void this.player.insertNoise("rawk", true);
@@ -97,6 +108,7 @@ export class VoiceSession {
     };
     ws.onclose = () => {
       this.ws = null;
+      this.busy = false;
       this.captureStop?.();
       this.captureStop = null;
       const s = useParrotStore.getState();
@@ -106,8 +118,10 @@ export class VoiceSession {
   }
 
   private speakOpening(line: string) {
+    if (this.busy) return;
     const ws = this.ws;
     if (!ws) return;
+    this.busy = true;
     useParrotStore.getState().pushMessage("parrot", line);
     useParrotStore.getState().setTranscripts(undefined, line);
     void this.player.insertNoise("rawk", true);
@@ -125,7 +139,7 @@ export class VoiceSession {
       JSON.stringify({
         type: "response.create",
         response: {
-          instructions: `Speak this opening line in a CROAKY, raspy, gravelly parrot voice, slowly, with a rawk and a beak click in it, then wait for the human: "${line}"`,
+          instructions: `Speak this opening line in a CROAKY, raspy, gravelly parrot voice, slowly, with a rawk and a beak click in it, then wait for the human. Do not start a second line: "${line}"`,
         },
       }),
     );
@@ -136,8 +150,13 @@ export class VoiceSession {
   sendText(text: string) {
     const ws = this.ws;
     if (!ws || !text.trim()) return;
+    if (this.busy) {
+      this.queued = text.trim();
+      return;
+    }
     useParrotStore.getState().pushMessage("user", text.trim());
     this.turns += 1;
+    this.busy = true;
     ws.send(
       JSON.stringify({
         type: "conversation.item.create",
@@ -151,14 +170,36 @@ export class VoiceSession {
     ws.send(JSON.stringify({ type: "response.create" }));
   }
 
+  mutter(line: string, kind: "mutter" | "song") {
+    const ws = this.ws;
+    if (!ws || this.busy) return false;
+    this.busy = true;
+    useParrotStore.getState().setMood(kind === "song" ? "amused" : "muttering");
+    useParrotStore.getState().pushMessage("parrot", line);
+    useParrotStore.getState().setTranscripts(undefined, line);
+    ws.send(
+      JSON.stringify({
+        type: "response.create",
+        response: {
+          instructions:
+            kind === "song"
+              ? `The path is empty. Quietly sing this short snatch in your croaky parrot voice, then stop and wait. Do not add more verses: "${line}"`
+              : `The path is empty. Mutter this aside to yourself and the chest, then stop. Do not ask a question: "${line}"`,
+        },
+      }),
+    );
+    return true;
+  }
+
   interrupt() {
-    this.ws?.send(JSON.stringify({ type: "response.cancel" }));
-    this.player.interrupt();
+    /* Intentionally unused while speaking — one response at a time. */
   }
 
   stop() {
     this.captureStop?.();
     this.captureStop = null;
+    this.busy = false;
+    this.queued = null;
     this.ws?.close();
     this.ws = null;
     void this.player.close();
@@ -169,7 +210,9 @@ export class VoiceSession {
   private async startMic() {
     try {
       const capture = await createCapture((b64, level) => {
-        useParrotStore.getState().setLevels(level, useParrotStore.getState().parrotLevel);
+        const store = useParrotStore.getState();
+        store.setLevels(level, store.parrotLevel);
+        if (this.busy || store.voiceStatus === "speaking") return;
         if (this.ws?.readyState === WebSocket.OPEN) {
           this.ws.send(JSON.stringify({ type: "input_audio_buffer.append", audio: b64 }));
         }
@@ -181,12 +224,18 @@ export class VoiceSession {
     }
   }
 
+  private flushQueue() {
+    const next = this.queued;
+    this.queued = null;
+    if (next) this.sendText(next);
+  }
+
   private async handleEvent(event: { type: string; [k: string]: unknown }) {
     const store = useParrotStore.getState();
     switch (event.type) {
       case "input_audio_buffer.speech_started":
+        if (this.busy || store.voiceStatus === "speaking") break;
         store.setVoiceStatus("listening");
-        this.player.interrupt();
         break;
       case "input_audio_buffer.speech_stopped":
         break;
@@ -198,12 +247,17 @@ export class VoiceSession {
           if (event.type.endsWith("completed")) {
             store.pushMessage("user", transcript);
             this.turns += 1;
+            this.busy = true;
           }
         }
         break;
       }
+      case "response.created":
+        this.busy = true;
+        break;
       case "response.output_audio.delta": {
         store.setVoiceStatus("speaking");
+        this.busy = true;
         const delta = String(event.delta ?? "");
         if (delta) {
           if (!this.responseHadAudio) {
@@ -254,14 +308,17 @@ export class VoiceSession {
         break;
       }
       case "response.done":
+        this.busy = false;
         store.setVoiceStatus("listening");
         store.setLevels(store.micLevel, 0);
         if (this.responseHadAudio) void this.player.insertNoise("rasp");
         this.responseHadAudio = false;
+        this.flushQueue();
         break;
       case "error": {
         const err = event.error as { message?: string } | undefined;
         const message = err?.message || "Voice error";
+        this.busy = false;
         store.setVoiceStatus("error", message);
         store.pushReason("error", "Voice", message);
         break;

@@ -6,8 +6,9 @@ export type { RoastIntensity } from "./types";
 
 export const PARROT_NAME = "TTPFTTP";
 
-export const PARROT_VOICE_IDS = ["leo", "rex", "zagan", "helix", "sal", "eve"] as const;
-export type ParrotVoiceId = (typeof PARROT_VOICE_IDS)[number];
+export const BUILTIN_VOICES = ["leo", "rex", "zagan", "helix", "sal", "eve"] as const;
+export const PARROT_VOICE_IDS = BUILTIN_VOICES;
+export type ParrotVoiceId = string;
 
 export const DEFAULT_VOICE: ParrotVoiceId = "rex";
 
@@ -17,8 +18,8 @@ export function buildSystemPrompt(opts: {
   opening?: string;
 }): string {
   const roast =
-    opts.intensity === "unhinged"
-      ? `Roast intensity: UNHINGED.
+    opts.intensity === "mad"
+      ? `Roast intensity: MAD.
 - You are a foul-mouthed canal bird. Rude, less polite, less politically correct.
 - Mock lycra, ramblers, gongoozlers, smug picnic energy, bad parking of boats, people who say "wellness".
 - British swearing is in: bloody, bollocks, git, muppet, twit, knackered, sod, hell. No slurs about race, sexuality, disability, or kids.
@@ -32,10 +33,11 @@ export function buildSystemPrompt(opts: {
         id: opts.scene.id,
         people: opts.scene.peopleCount,
         activity: opts.scene.activity,
-        dog: opts.scene.hasDog,
+        pram: opts.scene.hasPram,
         bike: opts.scene.hasBicycle,
-        closeUp: opts.scene.closeUp,
+        child: opts.scene.hasChild,
         dayPart: opts.scene.dayPart,
+        weather: opts.scene.weather?.label ?? null,
         weekday: opts.scene.weekday,
       })}`
     : "No live scene yet. You are perched on a treasure chest on a canal boat.";
@@ -52,13 +54,14 @@ Voice and delivery:
 - Do not merely describe the noises — make them. Example: "Rrawk— afternoon, you. *click* Path's busy."
 - Keep the croak: drop the pitch, rasp the vowels, slightly slower than a polite assistant.
 - Short sentences. Dry British humour. Canal, lock, narrowboat, tow-path, duck, chest, treasure, lycra, weather.
+- Never talk over yourself. One line at a time. Finish before the next thought.
 
 ${roast}
 
 Other rules:
-- Children: silly, not cruel. Roast the adult, not the kid.
-- Dogs: you like dogs more than people.
-- If nobody is there, mutter and squawk to the chest.
+- Children: silly, not cruel. Roast the adult, not the kid. Prams: roast the pusher, not the cargo.
+- If nobody is there, mutter or sing quietly to the chest. Do not start a conversation with empty air as if someone answered.
+- Mention the weather if it is doing something.
 
 Physical puppet:
 Call tools so the Furby body matches what you feel: laugh, surprised, dance, mischief, sleepy, purr, antenna colour.

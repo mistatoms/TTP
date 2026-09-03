@@ -1,152 +1,80 @@
 import { classifyScene } from "./classify";
-import type { DetectedObject, DetectedPerson, SceneContext } from "./types";
-
-const WASM_CDN = "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@1.0.1/wasm";
-const POSE_MODEL =
-  "https://storage.googleapis.com/mediapipe-models/pose_landmarker/pose_landmarker_lite/float16/1/pose_landmarker_lite.task";
-const OBJECT_MODELS = [
-  "https://storage.googleapis.com/mediapipe-models/object_detector/efficientdet_lite0/float16/1/efficientdet_lite0.tflite",
-  "https://storage.googleapis.com/mediapipe-models/object_detector/efficientdet_lite0/float16/latest/efficientdet_lite0.tflite",
-];
-
-type PoseLandmarker = import("@mediapipe/tasks-vision").PoseLandmarker;
-type ObjectDetector = import("@mediapipe/tasks-vision").ObjectDetector;
+import { YoloDetector } from "./yolo";
+import type { DetectedObject, DetectedPerson, SceneContext, WeatherSnapshot } from "./types";
 
 interface MotionSample {
-  xs: number[];
-  ys: number[];
+  cx: number;
+  cy: number;
 }
 
 export class VisionPipeline {
-  private pose: PoseLandmarker | null = null;
-  private objects: ObjectDetector | null = null;
+  private yolo = new YoloDetector();
   private lastVideoTime = -1;
+  private lastRun = 0;
   private motion = new Map<number, MotionSample>();
+  private weather: WeatherSnapshot | null = null;
   ready = false;
   error: string | null = null;
 
-  async init() {
-    const { FilesetResolver, PoseLandmarker, ObjectDetector } = await import(
-      "@mediapipe/tasks-vision"
-    );
-    const fileset = await FilesetResolver.forVisionTasks(WASM_CDN);
-    const tryPose = async (delegate: "GPU" | "CPU") => {
-      this.pose = await PoseLandmarker.createFromOptions(fileset, {
-        baseOptions: { modelAssetPath: POSE_MODEL, delegate },
-        runningMode: "VIDEO",
-        numPoses: 4,
-        minPoseDetectionConfidence: 0.4,
-        minPosePresenceConfidence: 0.4,
-        minTrackingConfidence: 0.4,
-      });
-    };
-    try {
-      await tryPose("GPU");
-    } catch {
-      await tryPose("CPU");
-    }
-    if (!this.pose) throw new Error("Pose model failed to load");
+  setWeather(w: WeatherSnapshot | null) {
+    this.weather = w;
+  }
 
-    for (const url of OBJECT_MODELS) {
-      const tryObjects = async (delegate: "GPU" | "CPU") => {
-        this.objects = await ObjectDetector.createFromOptions(fileset, {
-          baseOptions: { modelAssetPath: url, delegate },
-          runningMode: "VIDEO",
-          scoreThreshold: 0.35,
-          maxResults: 8,
-        });
-      };
-      try {
-        await tryObjects("GPU");
-        break;
-      } catch {
-        try {
-          await tryObjects("CPU");
-          break;
-        } catch {
-          this.objects = null;
-        }
-      }
+  async init() {
+    try {
+      await this.yolo.init();
+      this.ready = true;
+      this.error = null;
+    } catch (err) {
+      this.ready = false;
+      this.error = err instanceof Error ? err.message : "YOLO failed to load";
+      throw err;
     }
-    if (!this.objects) {
-      this.error = "Object detector unavailable — pose-only scene analysis";
-    }
-    this.ready = true;
   }
 
   detect(video: HTMLVideoElement, ts: number): SceneContext | null {
-    if (!this.pose) return null;
+    return null;
+  }
+
+  async detectAsync(video: HTMLVideoElement, ts: number): Promise<SceneContext | null> {
+    if (!this.ready) return null;
     if (video.currentTime === this.lastVideoTime) return null;
+    if (ts - this.lastRun < 220) return null;
     this.lastVideoTime = video.currentTime;
-    const w = video.videoWidth || 1;
-    const h = video.videoHeight || 1;
+    this.lastRun = ts;
 
-    const poses = this.pose.detectForVideo(video, ts);
-    const dets = this.objects?.detectForVideo(video, ts);
+    const dets = await this.yolo.detect(video);
+    const peopleRaw = dets.filter((d) => d.label === "person");
+    const objects: DetectedObject[] = dets
+      .filter((d) => d.label !== "person")
+      .map((d) => ({
+        label: d.label,
+        score: d.confidence,
+        bbox: [d.xyxy[0], d.xyxy[1], Math.max(0.01, d.xyxy[2] - d.xyxy[0]), Math.max(0.01, d.xyxy[3] - d.xyxy[1])],
+      }));
 
-    const people: DetectedPerson[] = (poses.landmarks ?? []).map((lms, i) => {
-      const xs = lms.map((p) => p.x);
-      const ys = lms.map((p) => p.y);
-      const minX = Math.min(...xs);
-      const maxX = Math.max(...xs);
-      const minY = Math.min(...ys);
-      const maxY = Math.max(...ys);
-      const bw = Math.max(0.02, maxX - minX);
-      const bh = Math.max(0.02, maxY - minY);
-      const cy = (minY + maxY) / 2;
+    const people: DetectedPerson[] = peopleRaw.map((d, i) => {
+      const w = Math.max(0.01, d.xyxy[2] - d.xyxy[0]);
+      const h = Math.max(0.01, d.xyxy[3] - d.xyxy[1]);
+      const cx = d.xyxy[0] + w / 2;
+      const cy = d.xyxy[1] + h / 2;
       const prev = this.motion.get(i);
-      let motion = 0;
-      if (prev && prev.xs.length === xs.length) {
-        let acc = 0;
-        for (let k = 0; k < xs.length; k++) acc += Math.hypot(xs[k]! - prev.xs[k]!, ys[k]! - prev.ys[k]!);
-        motion = Math.min(1, acc / xs.length / 0.08);
-      }
-      this.motion.set(i, { xs, ys });
-      const lShoulder = lms[11];
-      const rShoulder = lms[12];
-      const lHip = lms[23];
-      const rHip = lms[24];
-      let likelyChild = false;
-      if (lShoulder && rShoulder && lHip && rHip) {
-        const shoulderW = Math.abs(lShoulder.x - rShoulder.x);
-        const torso = Math.abs((lShoulder.y + rShoulder.y) / 2 - (lHip.y + rHip.y) / 2);
-        likelyChild = bh < 0.38 && shoulderW < 0.16 && torso < 0.22 && cy > 0.4;
-      }
+      const motion = prev ? Math.min(1, Math.hypot(cx - prev.cx, cy - prev.cy) / 0.08) : 0;
+      this.motion.set(i, { cx, cy });
       return {
         id: i,
-        bbox: [minX, minY, bw, bh],
-        closeness: Math.min(1, bh),
+        bbox: [d.xyxy[0], d.xyxy[1], w, h],
+        closeness: Math.min(1, h),
         motion,
-        likelyChild,
+        likelyChild: false,
       };
     });
 
-    const objects: DetectedObject[] = (dets?.detections ?? [])
-      .map((d) => {
-        const cat = d.categories[0];
-        const bb = d.boundingBox;
-        if (!cat || !bb) return null;
-        return {
-          label: cat.categoryName.toLowerCase(),
-          score: cat.score,
-          bbox: [bb.originX / w, bb.originY / h, bb.width / w, bb.height / h] as [
-            number,
-            number,
-            number,
-            number,
-          ],
-        };
-      })
-      .filter((x): x is DetectedObject => !!x && x.label !== "person");
-
-    return classifyScene({ people, objects });
+    return classifyScene({ people, objects, weather: this.weather });
   }
 
   close() {
-    this.pose?.close();
-    this.objects?.close();
-    this.pose = null;
-    this.objects = null;
+    this.yolo.close();
     this.ready = false;
   }
 }

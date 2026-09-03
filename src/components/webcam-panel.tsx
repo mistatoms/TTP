@@ -5,24 +5,9 @@ import { Card, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { OverlayBoxes, TowpathScene } from "@/components/towpath-scene";
 import { classifyScene, makeDemoDetections } from "@/lib/vision/classify";
-import { SCENE_LABELS, type SceneId } from "@/lib/vision/types";
+import { DEMO_SCENES, SCENE_LABELS } from "@/lib/vision/types";
 import { useParrotStore } from "@/lib/parrot/store";
 import { VisionPipeline } from "@/lib/vision/pipeline";
-
-const DEMO_SCENES: SceneId[] = [
-  "empty",
-  "single_adult",
-  "single_adult_male",
-  "single_adult_female",
-  "multiple_adults",
-  "adult_child",
-  "adult_dog",
-  "single_jogger",
-  "multiple_joggers",
-  "cyclist",
-  "multiple_cyclists",
-  "close_sitter",
-];
 
 export function WebcamPanel() {
   const videoRef = useRef<HTMLVideoElement>(null);
@@ -39,12 +24,13 @@ export function WebcamPanel() {
   const overlays = useParrotStore((s) => s.overlays);
   const setOverlays = useParrotStore((s) => s.setOverlays);
   const applyScene = useParrotStore((s) => s.applyScene);
+  const weather = useParrotStore((s) => s.weather);
 
   useEffect(() => {
     if (!useParrotStore.getState().scene) {
-      applyScene(classifyScene(makeDemoDetections(demoScene)), "demo");
+      applyScene(classifyScene({ ...makeDemoDetections(demoScene), weather }), "demo");
     }
-  }, [applyScene, demoScene]);
+  }, [applyScene, demoScene, weather]);
 
   async function startCamera() {
     setCamError(null);
@@ -60,6 +46,7 @@ export function WebcamPanel() {
       }
       setCameraMode("live");
       const pipe = new VisionPipeline();
+      pipe.setWeather(useParrotStore.getState().weather);
       pipelineRef.current = pipe;
       try {
         await pipe.init();
@@ -67,7 +54,7 @@ export function WebcamPanel() {
         if (pipe.error) setCamError(pipe.error);
       } catch (err) {
         setVisionReady(false);
-        setCamError(err instanceof Error ? err.message : "Vision models unavailable — live video only");
+        setCamError(err instanceof Error ? err.message : "YOLO model unavailable — live video only");
       }
     } catch (err) {
       setCamError(err instanceof Error ? err.message : "Camera permission denied");
@@ -86,14 +73,27 @@ export function WebcamPanel() {
   }
 
   useEffect(() => {
+    pipelineRef.current?.setWeather(weather);
+  }, [weather]);
+
+  useEffect(() => {
     if (cameraMode !== "live") return;
     let raf = 0;
+    let inflight = false;
     const loop = (t: number) => {
       const video = videoRef.current;
       const pipe = pipelineRef.current;
-      if (video && pipe?.ready && video.readyState >= 2) {
-        const next = pipe.detect(video, t);
-        if (next) applyScene(next, "live");
+      if (video && pipe?.ready && video.readyState >= 2 && !inflight) {
+        inflight = true;
+        void pipe
+          .detectAsync(video, t)
+          .then((next) => {
+            if (next) applyScene(next, "live");
+          })
+          .catch(() => undefined)
+          .finally(() => {
+            inflight = false;
+          });
       }
       raf = requestAnimationFrame(loop);
     };
@@ -109,7 +109,7 @@ export function WebcamPanel() {
         <CardTitle>Path camera</CardTitle>
         <div className="flex items-center gap-2">
           <Badge variant={cameraMode === "live" ? "live" : "outline"}>
-            {cameraMode === "live" ? (visionReady ? "Live + vision" : "Live") : "Demo patrol"}
+            {cameraMode === "live" ? (visionReady ? "Live + YOLO" : "Live") : "Demo patrol"}
           </Badge>
           <button
             type="button"

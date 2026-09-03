@@ -1,21 +1,24 @@
 export type SceneId =
   | "empty"
-  | "single_adult"
-  | "single_adult_male"
-  | "single_adult_female"
-  | "multiple_adults"
-  | "adult_child"
-  | "adult_dog"
-  | "single_jogger"
-  | "multiple_joggers"
-  | "cyclist"
-  | "multiple_cyclists"
-  | "close_sitter"
+  | "walker_single"
+  | "walker_multiple"
+  | "walker_child"
+  | "walker_pram"
+  | "cyclist_jogger"
   | "unknown";
 
 export type DayPart = "morning" | "afternoon" | "evening" | "night";
 
-export type ApparentPresentation = "masculine" | "feminine" | "unspecified";
+export type WeatherKind = "clear" | "cloudy" | "rain" | "drizzle" | "storm" | "fog" | "snow" | "wind";
+
+export interface WeatherSnapshot {
+  kind: WeatherKind;
+  label: string;
+  tempC: number | null;
+  windKph: number | null;
+  code: number | null;
+  at: number;
+}
 
 export interface DetectedPerson {
   id: number;
@@ -40,12 +43,13 @@ export interface SceneContext {
   activity: "still" | "strolling" | "brisk" | "running";
   hasDog: boolean;
   hasBicycle: boolean;
+  hasPram: boolean;
   hasChild: boolean;
   closeUp: boolean;
-  presentation: ApparentPresentation;
   dayPart: DayPart;
   weekday: string;
   clock: string;
+  weather: WeatherSnapshot | null;
   notes: string[];
   people: DetectedPerson[];
   objects: DetectedObject[];
@@ -54,19 +58,22 @@ export interface SceneContext {
 
 export const SCENE_LABELS: Record<SceneId, string> = {
   empty: "Empty path",
-  single_adult: "Single adult walker",
-  single_adult_male: "Single adult walker (male)",
-  single_adult_female: "Single adult walker (female)",
-  multiple_adults: "Multiple adult walkers",
-  adult_child: "Adult + child",
-  adult_dog: "Adult + dog",
-  single_jogger: "Single jogger / runner",
-  multiple_joggers: "Multiple joggers / runners",
-  cyclist: "Cyclist",
-  multiple_cyclists: "Multiple cyclists",
-  close_sitter: "Person sitting close (desk)",
+  walker_single: "Walker single",
+  walker_multiple: "Walker multiple",
+  walker_child: "Walker + child",
+  walker_pram: "Walker + pram",
+  cyclist_jogger: "Cyclist / jogger",
   unknown: "Unclear scene",
 };
+
+export const DEMO_SCENES: SceneId[] = [
+  "empty",
+  "walker_single",
+  "walker_multiple",
+  "walker_child",
+  "walker_pram",
+  "cyclist_jogger",
+];
 
 export function dayPartFromDate(d = new Date()): DayPart {
   const h = d.getHours();
@@ -82,4 +89,34 @@ export function weekdayName(d = new Date()) {
 
 export function clockLabel(d = new Date()) {
   return d.toLocaleTimeString("en-GB", { hour: "2-digit", minute: "2-digit" });
+}
+
+export function migrateSceneId(id: unknown): SceneId {
+  switch (id) {
+    case "empty":
+    case "walker_single":
+    case "walker_multiple":
+    case "walker_child":
+    case "walker_pram":
+    case "cyclist_jogger":
+    case "unknown":
+      return id;
+    case "single_adult":
+    case "single_adult_male":
+    case "single_adult_female":
+    case "adult_dog":
+    case "close_sitter":
+      return "walker_single";
+    case "multiple_adults":
+      return "walker_multiple";
+    case "adult_child":
+      return "walker_child";
+    case "single_jogger":
+    case "multiple_joggers":
+    case "cyclist":
+    case "multiple_cyclists":
+      return "cyclist_jogger";
+    default:
+      return "walker_single";
+  }
 }
