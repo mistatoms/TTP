@@ -82,6 +82,16 @@ export function TowpathScene({ scene }: { scene: SceneContext | null }) {
           <path d="M-16 18 L0 6 L16 18 L4 0" />
         </g>
       )}
+      {scene?.hasDog && (
+        <g transform="translate(360 206)">
+          <ellipse cx="10" cy="8" rx="14" ry="7" fill="#3a3228" />
+          <circle cx="24" cy="4" r="5" fill="#3a3228" />
+          <rect x="-2" y="10" width="3" height="10" fill="#2a241c" />
+          <rect x="8" y="10" width="3" height="10" fill="#2a241c" />
+          <rect x="16" y="10" width="3" height="10" fill="#2a241c" />
+          <path d="M-4 8 Q-14 2 -8 12" fill="#3a3228" />
+        </g>
+      )}
     </svg>
   );
 }
