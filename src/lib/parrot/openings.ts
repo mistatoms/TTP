@@ -55,34 +55,37 @@ const BANKS: Record<SceneId, LineBank> = {
       "Two or more of you. Statistically at least one is insufferable. Rrawk.",
     ],
   },
-  walker_child: {
+  walker_child_pram: {
     mild: [
       "Hello you two. Best behaviour — there's a parrot on duty and he reports to the ducks.",
       "Small person spotted. Welcome to the unofficial nature trail.",
+      "Pram on the tow path. Mind the ruts — that chest has seen worse cargo.",
     ],
     medium: [
       "Family patrol. If anyone asks, I am educational content with a beak.",
       "Keep hold of little legs near the edge. The water's decorative. I am not.",
+      "A pram. Very civilised. I'll keep the volume down. Mostly.",
     ],
     mad: [
       "Family patrol. Adult: you're on notice. Small person: you're fine, the bird likes you.",
-      "Keep hold of little legs. The water's decorative. The adult's decision-making is the hazard.",
-      "Educational content with a beak. The grown-up can take the roasting. Not you, kid.",
+      "A pram. Fine. Adult: watch the edge. Child: you're exempt from the roasting rota.",
+      "I roast the pusher, not the cargo. Union rules.",
     ],
   },
-  walker_pram: {
+  walker_dog: {
     mild: [
-      "Pram on the tow path. Mind the ruts — that chest has seen worse cargo.",
-      "Tiny passenger, big wheels. The ducks will escort you if you ask nicely.",
+      "Yes hello, four-legs. Your human may speak too, if they must.",
+      "A dog on the cut. Sensible. The human is optional.",
+      "Good afternoon to the one with the tail. The other one can catch up.",
     ],
     medium: [
-      "A pram. Very civilised. Try not to treat the path like a dual carriageway.",
-      "Buggy at twelve o'clock. I'll keep the volume down. Mostly.",
+      "Dog first, human second. That's the correct order on this path.",
+      "Four legs, one lead, one person pretending to be in charge.",
     ],
     mad: [
-      "A pram. Fine. Adult: watch the edge. Child: you're exempt from the roasting rota.",
-      "Wheels on the cut. If that buggy has a cup holder you're already winning at parenting.",
-      "Pram duty. I roast the pusher, not the cargo. Union rules.",
+      "The dog's fine. The human can keep walking.",
+      "If that lead is a personality, congratulations, you've outsourced it.",
+      "Rrawk. Nice dog. Shame about the chaperone.",
     ],
   },
   cyclist_jogger: {
@@ -162,6 +165,7 @@ export function sceneSummary(scene: SceneContext): string {
     scene.hasPram ? "pram" : null,
     scene.hasBicycle ? "bicycle" : null,
     scene.hasChild ? "child" : null,
+    scene.hasDog ? "dog" : null,
     `confidence ${(scene.confidence * 100).toFixed(0)}%`,
   ]
     .filter(Boolean)
