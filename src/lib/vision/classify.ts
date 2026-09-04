@@ -47,14 +47,18 @@ export function classifyScene(input: ClassifyInput, now = new Date()): SceneCont
     id = "empty";
     confidence = 0.9;
     notes.push("No person or bicycle in frame.");
-  } else if (pramAssoc.size > 0 || (hasPramObj && adults.length >= 1)) {
-    id = "walker_pram";
+  } else if (pramAssoc.size > 0 || hasPramObj || (hasChild && adults.length >= 1) || (hasChild && people.length >= 1)) {
+    id = "walker_child_pram";
     confidence = 0.78;
-    notes.push("Person associated with a pram-like object (relative size + IoU).");
-  } else if (hasChild && adults.length >= 1) {
-    id = "walker_child";
-    confidence = 0.76;
-    notes.push("Child from relative-height model beside an adult-scale figure.");
+    notes.push(
+      hasPramObj || pramAssoc.size > 0
+        ? "Person with a pram-like object."
+        : "Child beside an adult-scale figure.",
+    );
+  } else if (hasDog && people.length >= 1) {
+    id = "walker_dog";
+    confidence = 0.8;
+    notes.push("Companion animal detected alongside a person.");
   } else if (bikeAssoc.size > 0 || hasBicycle || activity === "running") {
     id = "cyclist_jogger";
     confidence = hasBicycle ? 0.8 : 0.72;
@@ -72,7 +76,7 @@ export function classifyScene(input: ClassifyInput, now = new Date()): SceneCont
     confidence = 0.4;
   }
 
-  if (hasDog) notes.push("Dog in frame — noted, not a scene class.");
+  if (hasDog && id !== "walker_dog") notes.push("Dog in frame.");
   if (input.weather) notes.push(`Weather ${input.weather.label}.`);
 
   return {
@@ -84,7 +88,7 @@ export function classifyScene(input: ClassifyInput, now = new Date()): SceneCont
     activity,
     hasDog,
     hasBicycle,
-    hasPram: id === "walker_pram",
+    hasPram: hasPramObj || id === "walker_child_pram",
     hasChild,
     closeUp,
     dayPart: dayPartFromDate(now),
@@ -121,12 +125,15 @@ export function makeDemoDetections(id: SceneId): ClassifyInput {
       return { people: [adult(0, 0.07)], objects: [] };
     case "walker_multiple":
       return { people: [adult(0, 0.08), adult(1, 0.07)], objects: [] };
-    case "walker_child":
-      return { people: [adult(0, 0.05), child], objects: [] };
-    case "walker_pram":
+    case "walker_child_pram":
       return {
-        people: [adult(0, 0.05)],
+        people: [adult(0, 0.05), child],
         objects: [{ label: "suitcase", score: 0.82, bbox: [0.34, 0.58, 0.16, 0.18] }],
+      };
+    case "walker_dog":
+      return {
+        people: [adult(0, 0.06)],
+        objects: [{ label: "dog", score: 0.88, bbox: [0.46, 0.62, 0.14, 0.16] }],
       };
     case "cyclist_jogger":
       return {
