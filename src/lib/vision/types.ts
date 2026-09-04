@@ -2,8 +2,8 @@ export type SceneId =
   | "empty"
   | "walker_single"
   | "walker_multiple"
-  | "walker_child"
-  | "walker_pram"
+  | "walker_child_pram"
+  | "walker_dog"
   | "cyclist_jogger"
   | "unknown";
 
@@ -60,8 +60,8 @@ export const SCENE_LABELS: Record<SceneId, string> = {
   empty: "Empty path",
   walker_single: "Walker single",
   walker_multiple: "Walker multiple",
-  walker_child: "Walker + child",
-  walker_pram: "Walker + pram",
+  walker_child_pram: "Walker + child/pram",
+  walker_dog: "Walker + dog",
   cyclist_jogger: "Cyclist / jogger",
   unknown: "Unclear scene",
 };
@@ -70,8 +70,8 @@ export const DEMO_SCENES: SceneId[] = [
   "empty",
   "walker_single",
   "walker_multiple",
-  "walker_child",
-  "walker_pram",
+  "walker_child_pram",
+  "walker_dog",
   "cyclist_jogger",
 ];
 
@@ -96,21 +96,24 @@ export function migrateSceneId(id: unknown): SceneId {
     case "empty":
     case "walker_single":
     case "walker_multiple":
-    case "walker_child":
-    case "walker_pram":
+    case "walker_child_pram":
+    case "walker_dog":
     case "cyclist_jogger":
     case "unknown":
       return id;
     case "single_adult":
     case "single_adult_male":
     case "single_adult_female":
-    case "adult_dog":
     case "close_sitter":
       return "walker_single";
     case "multiple_adults":
       return "walker_multiple";
+    case "walker_child":
+    case "walker_pram":
     case "adult_child":
-      return "walker_child";
+      return "walker_child_pram";
+    case "adult_dog":
+      return "walker_dog";
     case "single_jogger":
     case "multiple_joggers":
     case "cyclist":
