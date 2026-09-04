@@ -21,6 +21,7 @@ export class VoiceSession {
   private outputBuf = "";
   private responseHadAudio = false;
   private busy = false;
+  private draining = false;
   private queued: string | null = null;
 
   get active() {
@@ -28,7 +29,12 @@ export class VoiceSession {
   }
 
   get isBusy() {
-    return this.busy || useParrotStore.getState().voiceStatus === "speaking";
+    return (
+      this.busy ||
+      this.draining ||
+      this.player.isPlaying ||
+      useParrotStore.getState().voiceStatus === "speaking"
+    );
   }
 
   async start(opts: {
@@ -72,7 +78,7 @@ export class VoiceSession {
             turn_detection: {
               type: "server_vad",
               silence_duration_ms: 900,
-              create_response: true,
+              create_response: false,
               interrupt_response: false,
             },
             audio: {
@@ -109,6 +115,7 @@ export class VoiceSession {
     ws.onclose = () => {
       this.ws = null;
       this.busy = false;
+      this.draining = false;
       this.captureStop?.();
       this.captureStop = null;
       const s = useParrotStore.getState();
@@ -118,7 +125,7 @@ export class VoiceSession {
   }
 
   private speakOpening(line: string) {
-    if (this.busy) return;
+    if (this.isBusy) return;
     const ws = this.ws;
     if (!ws) return;
     this.busy = true;
@@ -150,7 +157,7 @@ export class VoiceSession {
   sendText(text: string) {
     const ws = this.ws;
     if (!ws || !text.trim()) return;
-    if (this.busy) {
+    if (this.isBusy) {
       this.queued = text.trim();
       return;
     }
@@ -172,7 +179,7 @@ export class VoiceSession {
 
   mutter(line: string, kind: "mutter" | "song") {
     const ws = this.ws;
-    if (!ws || this.busy) return false;
+    if (!ws || this.isBusy) return false;
     this.busy = true;
     useParrotStore.getState().setMood(kind === "song" ? "amused" : "muttering");
     useParrotStore.getState().pushMessage("parrot", line);
@@ -199,6 +206,7 @@ export class VoiceSession {
     this.captureStop?.();
     this.captureStop = null;
     this.busy = false;
+    this.draining = false;
     this.queued = null;
     this.ws?.close();
     this.ws = null;
@@ -212,7 +220,7 @@ export class VoiceSession {
       const capture = await createCapture((b64, level) => {
         const store = useParrotStore.getState();
         store.setLevels(level, store.parrotLevel);
-        if (this.busy || store.voiceStatus === "speaking") return;
+        if (this.isBusy) return;
         if (this.ws?.readyState === WebSocket.OPEN) {
           this.ws.send(JSON.stringify({ type: "input_audio_buffer.append", audio: b64 }));
         }
@@ -230,14 +238,33 @@ export class VoiceSession {
     if (next) this.sendText(next);
   }
 
+  private async releaseTurn() {
+    this.draining = true;
+    const started = Date.now();
+    while (this.player.isPlaying && Date.now() - started < 30_000) {
+      await new Promise((r) => setTimeout(r, 60));
+    }
+    this.draining = false;
+    this.busy = false;
+    const store = useParrotStore.getState();
+    if (store.voiceStatus === "speaking") store.setVoiceStatus("listening");
+    store.setLevels(store.micLevel, 0);
+    this.flushQueue();
+  }
+
   private async handleEvent(event: { type: string; [k: string]: unknown }) {
     const store = useParrotStore.getState();
     switch (event.type) {
       case "input_audio_buffer.speech_started":
-        if (this.busy || store.voiceStatus === "speaking") break;
+        if (this.isBusy) break;
         store.setVoiceStatus("listening");
         break;
       case "input_audio_buffer.speech_stopped":
+        if (this.isBusy) break;
+        if (this.ws?.readyState === WebSocket.OPEN) {
+          this.busy = true;
+          this.ws.send(JSON.stringify({ type: "response.create" }));
+        }
         break;
       case "conversation.item.input_audio_transcription.completed":
       case "conversation.item.input_audio_transcription.updated": {
@@ -247,7 +274,6 @@ export class VoiceSession {
           if (event.type.endsWith("completed")) {
             store.pushMessage("user", transcript);
             this.turns += 1;
-            this.busy = true;
           }
         }
         break;
@@ -308,17 +334,16 @@ export class VoiceSession {
         break;
       }
       case "response.done":
-        this.busy = false;
-        store.setVoiceStatus("listening");
-        store.setLevels(store.micLevel, 0);
         if (this.responseHadAudio) void this.player.insertNoise("rasp");
         this.responseHadAudio = false;
-        this.flushQueue();
+        store.setVoiceStatus("speaking");
+        void this.releaseTurn();
         break;
       case "error": {
         const err = event.error as { message?: string } | undefined;
         const message = err?.message || "Voice error";
         this.busy = false;
+        this.draining = false;
         store.setVoiceStatus("error", message);
         store.pushReason("error", "Voice", message);
         break;
