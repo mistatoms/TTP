@@ -44,6 +44,11 @@ export function ConversationPanel() {
 
   async function speakOpening() {
     if (!pendingOpening) return;
+    if (speakingLine || voiceSession.isBusy || voiceStatus === "speaking") return;
+    if (voiceSession.active) {
+      voiceSession.sendText(`(speak this opening, then wait) ${pendingOpening}`);
+      return;
+    }
     setSpeakingLine(true);
     try {
       await ttsPlayer.insertNoise("rawk", true);
@@ -62,6 +67,8 @@ export function ConversationPanel() {
     }
   }
 
+  const locked = speakingLine || voiceSession.isBusy || voiceStatus === "speaking";
+
   return (
     <Card className="flex h-80 flex-col overflow-hidden p-3 md:h-96">
       <CardHeader className="mb-2 shrink-0">
@@ -71,9 +78,9 @@ export function ConversationPanel() {
             type="button"
             className="text-[11px] text-muted hover:text-fg"
             onClick={() => void speakOpening()}
-            disabled={!pendingOpening || speakingLine}
+            disabled={!pendingOpening || locked}
           >
-            {speakingLine ? "Speaking…" : "Speak opening"}
+            {locked && voiceStatus === "speaking" ? "Speaking…" : "Speak opening"}
           </button>
           <button type="button" className="text-[11px] text-muted hover:text-fg" onClick={clearConversation}>
             Clear
