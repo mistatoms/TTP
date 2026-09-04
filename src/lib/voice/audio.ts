@@ -76,6 +76,12 @@ export class PcmPlayer {
   private shaper: WaveShaperNode | null = null;
   private lastNoise = 0;
 
+  get isPlaying() {
+    const ctx = this.ctx;
+    if (!ctx) return false;
+    return this.next - ctx.currentTime > 0.06;
+  }
+
   async ensure() {
     if (this.ctx) return this.ctx;
     const ctx = new AudioContext();
